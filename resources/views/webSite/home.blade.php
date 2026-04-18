@@ -1,0 +1,1 @@
+@extends('webSite.layouts.basicSetup')
