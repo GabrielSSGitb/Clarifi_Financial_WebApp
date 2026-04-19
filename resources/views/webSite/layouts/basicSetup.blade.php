@@ -8,7 +8,7 @@
     <title>Clarifi - DashBoard</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-slate-900 text-white">
+<body class="bg-slate-900 text-white flex flex-row">
 <header>
     <nav class="flex flex-col gap-5 p-4 h-screen w-15 bg-gray-800">
         <img src="{{asset('build/assets/images/Clarifi_Logo.png')}}" alt="Clarifi_Logo" class="flex-shrink-0">
@@ -70,5 +70,7 @@
         </a>
     </nav>
 </header>
+
+@yield('content')
 </body>
 </html>
