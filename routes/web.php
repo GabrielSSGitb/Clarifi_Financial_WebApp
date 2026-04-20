@@ -9,3 +9,6 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('webSite.home');
 });
+Route::get('/clarifi/history', function () {
+    return view('webSite.partials.history');
+});

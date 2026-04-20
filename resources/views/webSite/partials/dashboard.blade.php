@@ -40,8 +40,8 @@
             </span>
             </div>
 
-            <a href="#" class="group mt-4">
-                <button class="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl transition-all shadow-lg shadow-indigo-500/20 active:scale-95">
+            <a href="/clarifi/history" class="group mt-4">
+                <button class="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl transition-all shadow-lg shadow-indigo-500/20 active:scale-95 hover:cursor-pointer">
                     Check History
                 </button>
             </a>
