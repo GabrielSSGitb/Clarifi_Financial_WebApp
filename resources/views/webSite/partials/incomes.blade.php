@@ -3,7 +3,7 @@
 @section('content')
     <section class="max-w-2xl mx-auto pt-10">
         <div class="mb-10 text-center">
-            <h1 class="text-4xl font-bold text-white tracking-tight">Add Expense</h1>
+            <h1 class="text-4xl font-bold text-white tracking-tight">Add Income</h1>
             <p class="text-gray-500 mt-2">Record your earnings to keep your dashboard updated.</p>
         </div>
 
