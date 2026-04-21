@@ -8,6 +8,10 @@ Route::get('/clarifi/login', function () {
     return view('webSite.layouts.login');
 });
 
+Route::get('/clarifi/profile', function () {
+    return view('webSite.partials.profile');
+});
+
 Route::get('/clarifi/register', function () {
     return view('webSite.layouts.register');
 });
