@@ -6,7 +6,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
+Route::get('/clarifi/dashboard', function () {
     return view('webSite.home');
 });
 Route::get('/clarifi/history', function () {
@@ -14,4 +14,7 @@ Route::get('/clarifi/history', function () {
 });
 Route::get('/clarifi/addIncomes', function () {
     return view('webSite.partials.incomes');
+});
+Route::get('/clarifi/addExpenses', function () {
+    return view('webSite.partials.expense');
 });
