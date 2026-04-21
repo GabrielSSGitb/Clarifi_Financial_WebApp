@@ -12,3 +12,6 @@ Route::get('/dashboard', function () {
 Route::get('/clarifi/history', function () {
     return view('webSite.partials.history');
 });
+Route::get('/clarifi/addIncomes', function () {
+    return view('webSite.partials.incomes');
+});
