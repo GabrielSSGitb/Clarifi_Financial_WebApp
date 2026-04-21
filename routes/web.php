@@ -2,8 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+
+
+Route::get('/clarifi/login', function () {
+    return view('webSite.layouts.login');
+});
+
+Route::get('/clarifi/register', function () {
+    return view('webSite.layouts.register');
 });
 
 Route::get('/clarifi/dashboard', function () {
