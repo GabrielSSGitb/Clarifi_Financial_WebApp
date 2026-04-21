@@ -50,8 +50,12 @@
         <div class="p-8 rounded-3xl border border-white/5 bg-white/5 backdrop-blur-sm flex flex-col justify-between">
             <h2 class="text-gray-400 font-medium uppercase text-xs tracking-widest">Quick Actions</h2>
             <div class="grid grid-cols-2 gap-4 mt-6">
-                <button class="p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition-all text-sm border border-white/5">Add Income</button>
-                <button class="p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition-all text-sm border border-white/5">New Expense</button>
+                <a href="/clarifi/addIncomes">
+                    <button class="p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition-all text-sm border border-white/5">Add Income</button>
+                </a>
+                <a href="/clarifi/addExpense">
+                    <button class="p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition-all text-sm border border-white/5">New Expense</button>
+                </a>
             </div>
             <div class="mt-8 p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-sm">
                 Pro tip: You saved R$ 200,00 more than last week!
