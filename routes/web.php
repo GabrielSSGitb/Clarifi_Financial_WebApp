@@ -18,3 +18,6 @@ Route::get('/clarifi/addIncomes', function () {
 Route::get('/clarifi/addExpenses', function () {
     return view('webSite.partials.expense');
 });
+Route::get('/clarifi/investments', function () {
+    return view('webSite.partials.investments');
+});
