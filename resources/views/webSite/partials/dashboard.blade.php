@@ -53,7 +53,7 @@
                 <a href="/clarifi/addIncomes">
                     <button class="p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition-all text-sm border border-white/5">Add Income</button>
                 </a>
-                <a href="/clarifi/addExpense">
+                <a href="/clarifi/addExpenses">
                     <button class="p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition-all text-sm border border-white/5">New Expense</button>
                 </a>
             </div>
