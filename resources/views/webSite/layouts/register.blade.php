@@ -21,11 +21,11 @@
 
     <div class="bg-white/5 backdrop-blur-xl border border-white/10 p-8 md:p-10 rounded-[2.5rem] shadow-2xl">
         <!-- Add the action method here!! -->
-        <form method="POST" class="flex flex-col gap-5">
+        <form action="/register/new-user" method="POST" class="flex flex-col gap-5">
             @csrf
 
             <div class="flex flex-col gap-2">
-                <label for="name" class="text-xs uppercase tracking-widest text-gray-400 ml-1">Full Name</label>
+                <label for="name" class="text-xs uppercase tracking-widest text-gray-400 ml-1">Name</label>
                 <input type="text" name="name" id="name" placeholder="YourName..." required
                        class="w-full px-5 py-4 bg-[#080616]/50 border border-white/10 rounded-2xl text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all">
             </div>

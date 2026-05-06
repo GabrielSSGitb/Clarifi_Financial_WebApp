@@ -3,12 +3,12 @@
 @section('content')
     <section class="max-w-2xl mx-auto pt-10">
         <div class="mb-10 text-center">
-            <h1 class="text-4xl font-bold text-white tracking-tight">Add Income</h1>
-            <p class="text-gray-500 mt-2">Record your earnings to keep your dashboard updated.</p>
+            <h1 class="text-4xl font-bold text-white tracking-tight">Add Expenses</h1>
+            <p class="text-gray-500 mt-2">Add your expenses to calculate your profits.</p>
         </div>
 
         <div class="p-8 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md shadow-2xl">
-            <form action="#" method="POST" class="flex flex-col gap-6">
+            <form action="/dashboard/expenses/send" method="POST" class="flex flex-col gap-6">
                 @csrf
 
                 <div class="flex flex-col gap-2">
