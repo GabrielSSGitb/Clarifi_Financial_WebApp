@@ -40,7 +40,7 @@
             </span>
             </div>
 
-            <a href="/clarifi/history" class="group mt-4">
+            <a href="/history" class="group mt-4">
                 <button class="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl transition-all shadow-lg shadow-indigo-500/20 active:scale-95 hover:cursor-pointer">
                     Check History
                 </button>
@@ -50,10 +50,10 @@
         <div class="p-8 rounded-3xl border border-white/5 bg-white/5 backdrop-blur-sm flex flex-col justify-between">
             <h2 class="text-gray-400 font-medium uppercase text-xs tracking-widest">Quick Actions</h2>
             <div class="grid grid-cols-2 gap-4 mt-6">
-                <a href="/clarifi/addIncomes">
+                <a href="/addIncomes">
                     <button class="p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition-all text-sm border border-white/5">Add Income</button>
                 </a>
-                <a href="/clarifi/addExpenses">
+                <a href="/addExpenses">
                     <button class="p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition-all text-sm border border-white/5">New Expense</button>
                 </a>
             </div>

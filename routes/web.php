@@ -1,33 +1,37 @@
 <?php
 
+use App\Http\Controllers\IncomesController;
+use App\Http\Controllers\userRegister;
 use Illuminate\Support\Facades\Route;
 
 
 
-Route::get('/clarifi/login', function () {
+Route::get('/login', function () {
     return view('webSite.layouts.login');
 });
 
-Route::get('/clarifi/profile', function () {
+Route::get('/profile', function () {
     return view('webSite.partials.profile');
 });
 
-Route::get('/clarifi/register', function () {
+Route::get('/register', function () {
     return view('webSite.layouts.register');
 });
 
-Route::get('/clarifi/dashboard', function () {
+Route::get('/dashboard', function () {
     return view('webSite.home');
 });
-Route::get('/clarifi/history', function () {
+Route::get('/history', function () {
     return view('webSite.partials.history');
 });
-Route::get('/clarifi/addIncomes', function () {
+Route::get('/addIncomes', function () {
     return view('webSite.partials.incomes');
 });
-Route::get('/clarifi/addExpenses', function () {
+Route::post('/dashboard/incomes/send', [IncomesController::class, 'store']);
+
+Route::get('/addExpenses', function () {
     return view('webSite.partials.expense');
 });
-Route::get('/clarifi/investments', function () {
+Route::get('/investments', function () {
     return view('webSite.partials.investments');
 });
