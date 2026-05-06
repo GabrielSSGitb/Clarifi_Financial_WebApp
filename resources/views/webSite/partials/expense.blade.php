@@ -8,7 +8,7 @@
         </div>
 
         <div class="p-8 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md shadow-2xl">
-            <form action="#" method="POST" class="flex flex-col gap-6">
+            <form action="/dashboard/expenses/send" method="POST" class="flex flex-col gap-6">
                 @csrf
 
                 <div class="flex flex-col gap-2">

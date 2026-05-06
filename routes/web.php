@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\IncomesController;
 use App\Http\Controllers\userRegister;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,7 @@ Route::post('/dashboard/incomes/send', [IncomesController::class, 'store']);
 Route::get('/addExpenses', function () {
     return view('webSite.partials.expense');
 });
+Route::post('/dashboard/expenses/send', [ExpenseController::class, 'store']);
 Route::get('/investments', function () {
     return view('webSite.partials.investments');
 });
