@@ -19,7 +19,7 @@ Route::get('/register', function () {
     return view('webSite.layouts.register');
 });
 
-Route::get('/dashboard', function () {
+Route::get('/', function () {
     return view('webSite.home');
 });
 Route::get('/history', function () {
