@@ -14,14 +14,14 @@
 
 <main class="w-full max-w-xl relative">
     <div class="flex flex-col items-center mb-8">
-        <img src="{{asset('build/assets/images/Clarifi_Logo.png')}}" alt="Clarifi Logo" class="w-14 mb-4">
+        <img src="{{asset('build/assets/images/Clarifi_Oficial_Logo-removebg-preview.png')}}" alt="Clarifi Logo" class="w-50 mb-4">
         <h1 class="text-3xl font-bold text-white tracking-tight">Create your account</h1>
         <p class="text-gray-500 mt-2">Start managing your finances with Clarifi today.</p>
     </div>
 
     <div class="bg-white/5 backdrop-blur-xl border border-white/10 p-8 md:p-10 rounded-[2.5rem] shadow-2xl">
         <!-- Add the action method here!! -->
-        <form action="/register/new-user" method="POST" class="flex flex-col gap-5">
+        <form action="{{route('register')}}" method="POST" class="flex flex-col gap-5">
             @csrf
 
             <div class="flex flex-col gap-2">

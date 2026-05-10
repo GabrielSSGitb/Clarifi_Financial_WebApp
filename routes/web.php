@@ -2,26 +2,18 @@
 
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\IncomesController;
-use App\Http\Controllers\userRegister;
 use Illuminate\Support\Facades\Route;
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/', function () {
+        return view('webSite.home');
+    });
 
-
-Route::get('/login', function () {
-    return view('webSite.layouts.login');
+    Route::get('/profile', function () {
+        return view('webSite.partials.profile');
+    });
 });
 
-Route::get('/profile', function () {
-    return view('webSite.partials.profile');
-});
-
-Route::get('/register', function () {
-    return view('webSite.layouts.register');
-});
-
-Route::get('/dashboard', function () {
-    return view('webSite.home');
-});
 Route::get('/history', function () {
     return view('webSite.partials.history');
 });
@@ -33,7 +25,9 @@ Route::post('/dashboard/incomes/send', [IncomesController::class, 'store']);
 Route::get('/addExpenses', function () {
     return view('webSite.partials.expense');
 });
+
 Route::post('/dashboard/expenses/send', [ExpenseController::class, 'store']);
+
 Route::get('/investments', function () {
     return view('webSite.partials.investments');
 });
