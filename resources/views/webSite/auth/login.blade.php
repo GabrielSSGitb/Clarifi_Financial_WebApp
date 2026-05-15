@@ -33,7 +33,6 @@
             <div class="flex flex-col gap-2">
                 <div class="flex justify-between items-center ml-1">
                     <label for="password" class="text-xs uppercase tracking-widest text-gray-400">Password</label>
-                    <a href="#" class="text-xs text-indigo-400 hover:text-indigo-300 transition">Forgot?</a>
                 </div>
                 <input type="password" name="password" id="password" placeholder="••••••••" required
                        class="w-full px-5 py-4 bg-[#080616]/50 border border-white/10 rounded-2xl text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all placeholder:text-gray-700">
@@ -57,7 +56,7 @@
     </p>
     <p class="text-center mt-2 text-gray-500 text-sm">
 
-        <a href="/" class="hover:text-indigo-400 transition">I forgot my password</a>
+        <a href="/forgot-password" class="hover:text-indigo-400 transition">I forgot my password</a>
     </p>
 </main>
 

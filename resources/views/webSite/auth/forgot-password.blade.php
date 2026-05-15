@@ -20,7 +20,7 @@
 
     <div class="bg-white/5 backdrop-blur-xl border border-white/10 p-10 rounded-[2.5rem] shadow-2xl">
         <!-- Add the action method here!! -->
-        <form method="POST" class="flex flex-col gap-6">
+        <form method="POST" class="flex flex-col gap-6" action="/reset-password">
             @csrf
 
             <div class="flex flex-col gap-2">
