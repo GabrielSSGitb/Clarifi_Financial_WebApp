@@ -20,4 +20,9 @@ class IncomesController
 
         return redirect()->back();
     }
+
+    public function show()
+    {
+        return view('webSite.partials.incomes');
+    }
 }
