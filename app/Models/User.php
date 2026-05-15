@@ -33,4 +33,9 @@ class User extends Authenticatable implements PasskeyUser
             'password' => 'hashed',
         ];
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany(role::class);
+    }
 }

@@ -5,11 +5,13 @@ use App\Http\Controllers\IncomesController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('dashboard')->group(function () {
 
-        Route::get('/', function () {
-            return view('webSite.home');
-    });
+Route::get('/dashboard', function () {
+    return view('webSite.home');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+
+Route::prefix('dashboard')->group(function () {
 
     Route::get('incomes', [IncomesController::class, 'show']);
 
