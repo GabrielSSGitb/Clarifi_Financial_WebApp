@@ -10,6 +10,10 @@ Route::get('/dashboard', function () {
     return view('webSite.home');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/reset_password', function () {
+    return view('webSite.auth.forgot-password');
+});
+
 
 Route::prefix('dashboard')->group(function () {
 

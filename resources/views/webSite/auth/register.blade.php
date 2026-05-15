@@ -65,7 +65,7 @@
 
     <p class="text-center mt-8 text-gray-500 text-sm">
         Already have an account?
-        <a href="/clarifi/login" class="text-white font-semibold hover:text-indigo-400 transition">Sign in here</a>
+        <a href="{{ route('login') }}" class="text-white font-semibold hover:text-indigo-400 transition">Sign in here</a>
     </p>
 </main>
 
