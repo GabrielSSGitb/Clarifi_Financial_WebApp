@@ -2,13 +2,16 @@
 
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\IncomesController;
-use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 
 Route::get('/dashboard', function () {
     return view('webSite.home');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/', function () {
+    return view('webSite.home');
+})->middleware(['auth', 'verified']);
 
 Route::get('/forgot-password', function () {
     return view('webSite.auth.forgot-password');

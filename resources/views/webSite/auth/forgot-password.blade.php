@@ -23,7 +23,7 @@
         <form method="POST" class="flex flex-col gap-6" action="/reset-password">
             @csrf
 
-            <div class="flex flex-col gap-2">
+            <div class="flex flex-col gap-2">x
                 <label for="email" class="text-xs uppercase tracking-widest text-gray-400 ml-1">Email Address</label>
                 <input type="email" name="email" id="email" placeholder="name@company.com" required
                        class="w-full px-5 py-4 bg-[#080616]/50 border border-white/10 rounded-2xl text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all placeholder:text-gray-700">
