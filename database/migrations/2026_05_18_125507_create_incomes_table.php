@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('incomes', function (Blueprint $table) {
             $table->id();
-            $table->decimal('amount');
+            $table->foreignId('user_id')
+                ->constrained()
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+            $table->decimal('amount', 10, 2);
             $table->string('description');
             $table->string('category');
             $table->date('date');

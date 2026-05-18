@@ -3,7 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Incomes;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use MongoDB\Driver\Session;
 
 class IncomesController
 {
@@ -16,7 +21,13 @@ class IncomesController
             'category' => 'required|string',
         ]);
 
-        Incomes::create($validate);
+        Incomes::create([
+            'user_id'     => Auth::id(),
+            'amount'      => $validate['amount'],
+            'date'        => $validate['date'],
+            'description' => $validate['description'],
+            'category'    => $validate['category'],
+        ]);
 
         return redirect()->back();
     }
