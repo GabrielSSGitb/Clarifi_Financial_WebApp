@@ -27,16 +27,27 @@
             <div class="flex flex-col gap-2">
                 <label for="email" class="text-xs uppercase tracking-widest text-gray-400 ml-1">Email Address</label>
                 <input type="email" name="email" id="email" placeholder="name@company.com" required
-                       class="w-full px-5 py-4 bg-[#080616]/50 border border-white/10 rounded-2xl text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all placeholder:text-gray-700">
+                       class="w-full px-5 py-4 bg-[#080616]/50 border border-white/10 rounded-2xl text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all placeholder:text-gray-700  @error('email') is-invalid @enderror">
             </div>
+
+            @error('email')
+            <div class="p-4 mb-4 text-sm text-fg-danger-strong rounded-base bg-danger-soft" role="alert">
+                <span class="font-medium">Error!!!</span> {{$message}}
+            </div>
+            @enderror
 
             <div class="flex flex-col gap-2">
                 <div class="flex justify-between items-center ml-1">
                     <label for="password" class="text-xs uppercase tracking-widest text-gray-400">Password</label>
                 </div>
                 <input type="password" name="password" id="password" placeholder="••••••••" required
-                       class="w-full px-5 py-4 bg-[#080616]/50 border border-white/10 rounded-2xl text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all placeholder:text-gray-700">
+                       class="w-full px-5 py-4 bg-[#080616]/50 border border-white/10 rounded-2xl text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all placeholder:text-gray-700 @error('password') is-invalid @enderror">
             </div>
+            @error('password')
+            <div class="p-4 mb-4 text-sm text-fg-danger-strong rounded-base bg-danger-soft" role="alert">
+                <span class="font-medium">Error!!!</span> {{$message}}
+            </div>
+            @enderror
 
             <label class="flex items-center gap-3 cursor-pointer group w-fit">
                 <input type="checkbox" class="w-5 h-5 rounded border-white/10 bg-[#080616] text-indigo-600 focus:ring-offset-[#080616]">

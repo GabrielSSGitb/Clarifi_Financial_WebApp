@@ -26,8 +26,13 @@
             <div class="flex flex-col gap-2">x
                 <label for="email" class="text-xs uppercase tracking-widest text-gray-400 ml-1">Email Address</label>
                 <input type="email" name="email" id="email" placeholder="name@company.com" required
-                       class="w-full px-5 py-4 bg-[#080616]/50 border border-white/10 rounded-2xl text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all placeholder:text-gray-700">
+                       class="w-full px-5 py-4 bg-[#080616]/50 border border-white/10 rounded-2xl text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all placeholder:text-gray-700 @error('email') is-invalid @enderror ">
             </div>
+            @error('email')
+            <div class="p-4 mb-4 text-sm text-fg-danger-strong rounded-base bg-danger-soft" role="alert">
+                <span class="font-medium">Error!!!</span> {{$message}}
+            </div>
+            @enderror
 
             <button type="submit"
                     class="w-full py-4 mt-2 bg-emerald-600 hover:bg-emerald-500  text-white font-bold rounded-2xl transition-all shadow-lg shadow-indigo-500/20 active:scale-[0.98]">
