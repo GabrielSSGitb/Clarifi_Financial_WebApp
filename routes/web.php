@@ -2,16 +2,15 @@
 
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\IncomesController;
+use App\Http\Controllers\UserController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 
-Route::get('/dashboard', function () {
-    return view('webSite.home');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/', function () {
-    return view('webSite.home');
-})->middleware(['auth', 'verified']);
+Route::get('/', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard')->middleware(['auth', 'verified']);
 
 
 Route::prefix('dashboard')->group(function () {
