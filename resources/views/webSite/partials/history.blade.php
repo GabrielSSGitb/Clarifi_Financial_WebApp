@@ -1,192 +1,414 @@
 @extends('webSite.layouts.basicSetup')
 
 @section('content')
-    <section class="max-w-6xl mx-auto">
+    <section class="history-section">
 
         {{-- Header --}}
-        <div class="flex justify-between items-end mb-10">
+        <div class="history-header">
             <div>
-                <h1 class="text-4xl font-bold text-white tracking-tight">Transaction History</h1>
-                <p class="text-gray-500 mt-2">A detailed overview of all your financial activity.</p>
+                <h1 class="history-title">Transaction History</h1>
+                <p class="history-subtitle">A detailed overview of all your financial activity.</p>
             </div>
-            <div class="flex gap-3">
-                <button class="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-sm text-gray-300 hover:bg-white/10 transition">Export CSV</button>
+            <div class="header-actions">
+                <button class="btn-secondary">Export CSV</button>
             </div>
         </div>
 
         {{-- Summary Cards --}}
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
-            <div class="p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm flex flex-col gap-2">
-                <span class="text-xs text-gray-500 uppercase tracking-widest">Total Income</span>
-                <span class="text-2xl font-bold text-emerald-400">+ R$ {{number_format($totalIncomes, 2, '.', ',')}}</span>
-                <span class="text-xs text-gray-500">This month</span>
+        <div class="summary-grid">
+            <div class="summary-card card-income">
+                <span class="card-label">Total Income</span>
+                <span class="card-value value-income">+ R$ {{number_format($totalIncomes, 2, '.', ',')}}</span>
+                <span class="card-subtext">This month</span>
             </div>
-            <div class="p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm flex flex-col gap-2">
-                <span class="text-xs text-gray-500 uppercase tracking-widest">Total Expenses</span>
-                <span class="text-2xl font-bold text-red-400">- R$ {{number_format($totalExpenses, 2, '.', ',')}}</span>
-                <span class="text-xs text-gray-500">This month</span>
+            <div class="summary-card card-expense">
+                <span class="card-label">Total Expenses</span>
+                <span class="card-value value-expense">- R$ {{number_format($totalExpenses, 2, '.', ',')}}</span>
+                <span class="card-subtext">This month</span>
             </div>
-            <div class="p-6 rounded-2xl border border-indigo-500/30 bg-indigo-500/10 backdrop-blur-sm flex flex-col gap-2">
-                <span class="text-xs text-indigo-300 uppercase tracking-widest">Net Balance</span>
-                <span class="text-2xl font-bold text-white">R$ {{number_format($currentValue, 2, '.', ',')}}</span>
-                <span class="text-xs text-indigo-300">↑ 12% since last month</span>
+            <div class="summary-card card-balance">
+                <span class="card-label balance-label">Net Balance</span>
+                <span class="card-value value-balance">R$ {{number_format($currentValue, 2, '.', ',')}}</span>
+                <span class="card-subtext balance-subtext">↑ 12% since last month</span>
             </div>
         </div>
 
         {{-- Filters & Search --}}
-        <div class="flex flex-col sm:flex-row gap-4 mb-6">
-            <div class="flex gap-2 p-1 bg-white/5 border border-white/10 rounded-xl w-fit">
+        <div class="toolbar-flex">
+            <div class="filter-wrapper">
                 <button onclick="filterTransactions('all', this)"
-                    class="filter-btn active-filter px-4 py-2 rounded-lg text-sm font-medium transition-all">All</button>
+                        class="filter-btn active-filter">All</button>
                 <button onclick="filterTransactions('income', this)"
-                    class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition-all">Income</button>
+                        class="filter-btn text-muted">Income</button>
                 <button onclick="filterTransactions('expense', this)"
-                    class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition-all">Expenses</button>
+                        class="filter-btn text-muted">Expenses</button>
             </div>
 
-            <div class="relative flex-1 max-w-sm ml-auto">
-                <svg xmlns="http://www.w3.org/2000/svg" class="size-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="search-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
                 </svg>
-                <input id="searchInput" oninput="searchTransactions(this.value)" type="text" placeholder="Search transactions..."
-                    class="w-full pl-9 pr-4 py-2 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder-gray-500 outline-none focus:border-indigo-500 transition">
+                <input id="searchInput" oninput="searchTransactions(this.value)" type="text" placeholder="Search transactions..." class="search-input">
             </div>
         </div>
 
         {{-- Transactions Table --}}
-        <div class="overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md shadow-2xl">
-            <table class="w-full text-left border-collapse">
+        <div class="table-container">
+            <table class="transactions-table">
                 <thead>
-                    <tr class="border-b border-white/10 bg-white/5">
-                        <th class="px-6 py-4 text-gray-400 font-medium text-xs uppercase tracking-wider">Description</th>
-                        <th class="px-6 py-4 text-gray-400 font-medium text-xs uppercase tracking-wider">Category</th>
-                        <th class="px-6 py-4 text-gray-400 font-medium text-xs uppercase tracking-wider">Date</th>
-                        <th class="px-6 py-4 text-gray-400 font-medium text-xs uppercase tracking-wider text-right">Amount</th>
-                    </tr>
+                <tr class="table-header-row">
+                    <th class="th-column text-left">Description</th>
+                    <th class="th-column text-left">Category</th>
+                    <th class="th-column text-left">Date</th>
+                    <th class="th-column text-right">Amount</th>
+                </tr>
                 </thead>
-                <tbody id="transactionsBody" class="divide-y divide-white/5">
+                <tbody id="transactionsBody" class="table-body">
 
-                    <tr class="transaction-row hover:bg-white/5 transition-colors" data-type="income" data-desc="Freelance Project">
-                        <td class="px-6 py-5">
-                            <div class="flex items-center gap-3">
-                                <div class="p-2 bg-emerald-500/20 rounded-lg text-emerald-400">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                @foreach($incomes as $income)
+                    <tr class="transaction-row row-income" data-type="income" data-desc="Freelance Project">
+                        <td class="td-cell">
+                            <div class="description-block">
+                                <div class="icon-box box-income">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                                 </div>
-                                <span class="font-medium text-white">Freelance Project</span>
+                                <span class="description-title">{{$income->description}}</span>
                             </div>
                         </td>
-                        <td class="px-6 py-5"><span class="px-2 py-1 bg-emerald-500/10 text-emerald-400 text-xs rounded-lg">Development</span></td>
-                        <td class="px-6 py-5 text-gray-400 text-sm">20 Apr, 2026</td>
-                        <td class="px-6 py-5 text-right font-bold text-emerald-400">+ R$ 4.500,00</td>
+                        <td class="td-cell"><span class="badge badge-income">{{$income->category}}</span></td>
+                        <td class="td-cell text-muted text-sm">{{$income->date->format("d-m-Y")}}</td>
+                        <td class="td-cell text-right font-bold value-income">+ R$ {{number_format($income->amount, 2, '.', ',')}}</td>
                     </tr>
+                @endforeach
 
-                    <tr class="transaction-row hover:bg-white/5 transition-colors" data-type="expense" data-desc="Netflix Subscription">
-                        <td class="px-6 py-5">
-                            <div class="flex items-center gap-3">
-                                <div class="p-2 bg-red-500/20 rounded-lg text-red-400">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
+                @foreach($expenses as $expense)
+                    @if($expense->category == 'food')
+                        <tr class="transaction-row row-expense" data-type="expense" data-desc="Grocery Store">
+                            <td class="td-cell">
+                                <div class="description-block">
+                                    <div class="icon-box box-food">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                    </div>
+                                    <span class="description-title">{{$expense->description}}</span>
                                 </div>
-                                <span class="font-medium text-white">Netflix Subscription</span>
+                            </td>
+                            <td class="td-cell"><span class="badge badge-food">Food</span></td>
+                            <td class="td-cell text-muted text-sm">{{$expense->date->format("d-m-Y")}}</td>
+                            <td class="td-cell text-right font-bold value-expense">- R$ {{number_format($expense->amount, 2, '.', ',')}}</td>
+                        </tr>
+                    @endif
+                    <tr class="transaction-row row-expense" data-type="expense" data-desc="Netflix Subscription">
+                        <td class="td-cell">
+                            <div class="description-block">
+                                <div class="icon-box box-expense">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
+                                </div>
+                                <span class="description-title">{{$expense->description}}</span>
                             </div>
                         </td>
-                        <td class="px-6 py-5"><span class="px-2 py-1 bg-red-500/10 text-red-400 text-xs rounded-lg">Entertainment</span></td>
-                        <td class="px-6 py-5 text-gray-400 text-sm">18 Apr, 2026</td>
-                        <td class="px-6 py-5 text-right font-bold text-red-400">- R$ 55,90</td>
+                        <td class="td-cell"><span class="badge badge-expense">{{$expense->category}}</span></td>
+                        <td class="td-cell text-muted text-sm">{{$expense->date->format("d-m-Y")}}</td>
+                        <td class="td-cell text-right font-bold value-expense">- R$ {{number_format($expense->amount, 2, '.', ',')}}</td>
                     </tr>
+                @endforeach
 
-                    <tr class="transaction-row hover:bg-white/5 transition-colors" data-type="expense" data-desc="Grocery Store">
-                        <td class="px-6 py-5">
-                            <div class="flex items-center gap-3">
-                                <div class="p-2 bg-orange-500/20 rounded-lg text-orange-400">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                                </div>
-                                <span class="font-medium text-white">Grocery Store</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-5"><span class="px-2 py-1 bg-orange-500/10 text-orange-400 text-xs rounded-lg">Food</span></td>
-                        <td class="px-6 py-5 text-gray-400 text-sm">15 Apr, 2026</td>
-                        <td class="px-6 py-5 text-right font-bold text-red-400">- R$ 342,15</td>
-                    </tr>
-
-                    <tr class="transaction-row hover:bg-white/5 transition-colors" data-type="income" data-desc="Salary">
-                        <td class="px-6 py-5">
-                            <div class="flex items-center gap-3">
-                                <div class="p-2 bg-emerald-500/20 rounded-lg text-emerald-400">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                                </div>
-                                <span class="font-medium text-white">Salary</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-5"><span class="px-2 py-1 bg-emerald-500/10 text-emerald-400 text-xs rounded-lg">Work</span></td>
-                        <td class="px-6 py-5 text-gray-400 text-sm">10 Apr, 2026</td>
-                        <td class="px-6 py-5 text-right font-bold text-emerald-400">+ R$ 8.000,00</td>
-                    </tr>
-
-                    <tr class="transaction-row hover:bg-white/5 transition-colors" data-type="expense" data-desc="Electric Bill">
-                        <td class="px-6 py-5">
-                            <div class="flex items-center gap-3">
-                                <div class="p-2 bg-yellow-500/20 rounded-lg text-yellow-400">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
-                                </div>
-                                <span class="font-medium text-white">Electric Bill</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-5"><span class="px-2 py-1 bg-yellow-500/10 text-yellow-400 text-xs rounded-lg">Utilities</span></td>
-                        <td class="px-6 py-5 text-gray-400 text-sm">08 Apr, 2026</td>
-                        <td class="px-6 py-5 text-right font-bold text-red-400">- R$ 210,00</td>
-                    </tr>
-
-                    <tr class="transaction-row hover:bg-white/5 transition-colors" data-type="income" data-desc="Investment Return">
-                        <td class="px-6 py-5">
-                            <div class="flex items-center gap-3">
-                                <div class="p-2 bg-emerald-500/20 rounded-lg text-emerald-400">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-                                </div>
-                                <span class="font-medium text-white">Investment Return</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-5"><span class="px-2 py-1 bg-emerald-500/10 text-emerald-400 text-xs rounded-lg">Investments</span></td>
-                        <td class="px-6 py-5 text-gray-400 text-sm">05 Apr, 2026</td>
-                        <td class="px-6 py-5 text-right font-bold text-emerald-400">+ R$ 6.000,00</td>
-                    </tr>
-
-                    <tr class="transaction-row hover:bg-white/5 transition-colors" data-type="expense" data-desc="Gym Membership">
-                        <td class="px-6 py-5">
-                            <div class="flex items-center gap-3">
-                                <div class="p-2 bg-purple-500/20 rounded-lg text-purple-400">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
-                                </div>
-                                <span class="font-medium text-white">Gym Membership</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-5"><span class="px-2 py-1 bg-purple-500/10 text-purple-400 text-xs rounded-lg">Health</span></td>
-                        <td class="px-6 py-5 text-gray-400 text-sm">01 Apr, 2026</td>
-                        <td class="px-6 py-5 text-right font-bold text-red-400">- R$ 120,00</td>
-                    </tr>
-
-                    {{-- Empty state --}}
-                    <tr id="emptyState" class="hidden">
-                        <td colspan="4" class="px-6 py-16 text-center text-gray-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-10 mx-auto mb-3 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                            No transactions found.
-                        </td>
-                    </tr>
+                <tr id="emptyState" class="hidden">
+                    <td colspan="4" class="empty-state-cell">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="empty-state-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        No transactions found.
+                    </td>
+                </tr>
 
                 </tbody>
             </table>
 
-            <div class="px-6 py-4 bg-white/5 border-t border-white/10 flex justify-between items-center text-sm text-gray-400">
+            {{-- Footer Table --}}
+            <div class="table-footer">
                 <span id="resultCount">Showing 7 results</span>
-                <div class="flex gap-2">
-                    <button class="px-3 py-1 bg-white/5 rounded-lg hover:bg-white/10 transition opacity-30 cursor-not-allowed">Prev</button>
-                    <button class="px-3 py-1 bg-white/5 rounded-lg hover:bg-white/10 transition opacity-30 cursor-not-allowed">Next</button>
+                <div class="footer-actions">
+                    <button class="btn-pagination disabled">Prev</button>
+                    <button class="btn-pagination disabled">Next</button>
                 </div>
             </div>
         </div>
     </section>
 
     <style>
-        .active-filter { background: #4f46e5; color: white; }
+        /* --- ESTRUTURA GERAL --- */
+        .history-section {
+            max-width: 1152px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .text-muted { color: #6b7280; }
+        .text-sm { font-size: 0.875rem; }
+        .text-right { text-align: right; }
+        .text-left { text-align: left; }
+        .font-bold { font-weight: 700; }
+        .hidden { display: none !important; }
+
+        /* --- HEADER --- */
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 2.5rem;
+        }
+        .history-title {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.025em;
+            margin: 0;
+        }
+        .history-subtitle {
+            color: #6b7280;
+            margin-top: 0.5rem;
+            margin-bottom: 0;
+        }
+        .btn-secondary {
+            padding: 0.5rem 1rem;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            color: #d1d5db;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- SUMMARY CARDS --- */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+        @media (min-width: 640px) {
+            .summary-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        }
+        .summary-card {
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(4px);
+            display: flex;
+            flex-col: column;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .card-balance {
+            border-color: rgba(79, 70, 229, 0.3);
+            background-color: rgba(79, 70, 229, 0.1);
+        }
+        .card-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .balance-label { color: #a5b4fc; }
+        .card-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .value-income { color: #34d399; }
+        .value-expense { color: #f87171; }
+        .value-balance { color: #ffffff; }
+        .card-subtext {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        .balance-subtext { color: #a5b4fc; }
+
+        /* --- TOOLBAR (FILTERS & SEARCH) --- */
+        .toolbar-flex {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        @media (min-width: 640px) {
+            .toolbar-flex { flex-direction: row; }
+        }
+        .filter-wrapper {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.25rem;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            width: fit-content;
+        }
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-btn.text-muted:hover { color: #ffffff; }
+        .active-filter {
+            background: #4f46e5;
+            color: #ffffff !important;
+        }
+        .search-wrapper {
+            position: relative;
+            flex: 1 1 0%;
+            max-width: 24rem;
+        }
+        @media (min-width: 640px) {
+            .search-wrapper { margin-left: auto; }
+        }
+        .search-icon {
+            width: 1rem;
+            height: 1rem;
+            color: #6b7280;
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .search-input {
+            width: 100%;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            padding-left: 2.25rem;
+            padding-right: 1rem;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            color: #ffffff;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        .search-input::placeholder { color: #555; }
+        .search-input:focus { border-color: #4f46e5; }
+
+        /* --- TABLE --- */
+        .table-container {
+            overflow: hidden;
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .transactions-table {
+            width: 100%;
+            text-align: left;
+            border-collapse: collapse;
+        }
+        .table-header-row {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .th-column {
+            padding: 1rem 1.5rem;
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .table-body {
+            border-top: 0px solid;
+        }
+        .table-body > tr + tr {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .transaction-row {
+            transition: background-color 0.2s;
+        }
+        .transaction-row:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .td-cell {
+            padding: 1.25rem 1.5rem;
+        }
+        .description-block {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* --- CLASSES PARA ALIMENTAR DINAMICAMENTE COM O BANCO --- */
+        .description-title {
+            font-weight: 500;
+            color: #ffffff;
+        }
+        .icon-box {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+        }
+        .svg-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            display: block;
+        }
+        .box-income { background-color: rgba(52, 211, 153, 0.2); color: #34d399; }
+        .box-expense { background-color: rgba(248, 113, 113, 0.2); color: #f87171; }
+        .box-food { background-color: rgba(251, 146, 60, 0.2); color: #fb923c; }
+        .box-yellow { background-color: rgba(250, 204, 21, 0.2); color: #facc15; }
+        .box-purple { background-color: rgba(192, 132, 252, 0.2); color: #c084fc; }
+
+        .badge {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            border-radius: 0.5rem;
+        }
+        .badge-income { background-color: rgba(52, 211, 153, 0.1); color: #34d399; }
+        .badge-expense { background-color: rgba(248, 113, 113, 0.1); color: #f87171; }
+        .badge-food { background-color: rgba(251, 146, 60, 0.1); color: #fb923c; }
+        .badge-yellow { background-color: rgba(250, 204, 21, 0.1); color: #facc15; }
+        .badge-purple { background-color: rgba(192, 132, 252, 0.1); color: #c084fc; }
+
+        /* --- EMPTY STATE & FOOTER --- */
+        .empty-state-cell {
+            padding: 4rem 1.5rem;
+            text-align: center;
+            color: #6b7280;
+        }
+        .empty-state-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 0.75rem;
+            opacity: 0.3;
+        }
+        .table-footer {
+            padding: 1rem 1.5rem;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+            color: #4b5563;
+        }
+        .footer-actions { display: flex; gap: 0.5rem; }
+        .btn-pagination {
+            padding: 0.25rem 0.75rem;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 0.5rem;
+            border: none;
+            color: inherit;
+            transition: background-color 0.2s;
+        }
+        .btn-pagination.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
     </style>
 
     <script>
@@ -219,10 +441,10 @@
             currentFilter = type;
             document.querySelectorAll('.filter-btn').forEach(b => {
                 b.classList.remove('active-filter');
-                b.classList.add('text-gray-400');
+                b.classList.add('text-muted');
             });
             btn.classList.add('active-filter');
-            btn.classList.remove('text-gray-400');
+            btn.classList.remove('text-muted');
             applyFilters();
         }
 

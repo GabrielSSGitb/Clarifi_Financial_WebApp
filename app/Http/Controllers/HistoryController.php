@@ -13,8 +13,10 @@ class HistoryController extends Controller
     public function index() {
         $totalIncomes = Incomes::where('user_id', '=', Auth::id())->sum('amount');
         $totalExpenses = Expense::where('user_id', '=', Auth::id())->sum('amount');
+        $incomes = Incomes::all();
+        $expenses = Expense::all();
         $currentValue = $totalIncomes - $totalExpenses;
 
-        return view('webSite.partials.history', compact(['totalIncomes', 'totalExpenses', 'currentValue']));
+        return view('webSite.partials.history', compact(['totalIncomes', 'totalExpenses', 'currentValue', 'incomes', 'expenses']));
     }
 }
