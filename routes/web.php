@@ -24,9 +24,7 @@ Route::prefix('dashboard')->group(function () {
         return view('webSite.partials.history');
     });
 
-    Route::get('expenses', function () {
-        return view('webSite.partials.expense');
-    });
+    Route::get('expenses', [ExpenseController::class, 'show']);
 
     Route::post('expenses/send', [ExpenseController::class, 'store']);
 
