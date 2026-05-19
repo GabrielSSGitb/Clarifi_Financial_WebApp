@@ -18,17 +18,17 @@
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
             <div class="p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm flex flex-col gap-2">
                 <span class="text-xs text-gray-500 uppercase tracking-widest">Total Income</span>
-                <span class="text-2xl font-bold text-emerald-400">+ R$ 18.500,00</span>
+                <span class="text-2xl font-bold text-emerald-400">+ R$ {{number_format($totalIncomes, 2, '.', ',')}}</span>
                 <span class="text-xs text-gray-500">This month</span>
             </div>
             <div class="p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm flex flex-col gap-2">
                 <span class="text-xs text-gray-500 uppercase tracking-widest">Total Expenses</span>
-                <span class="text-2xl font-bold text-red-400">- R$ 6.050,00</span>
+                <span class="text-2xl font-bold text-red-400">- R$ {{number_format($totalExpenses, 2, '.', ',')}}</span>
                 <span class="text-xs text-gray-500">This month</span>
             </div>
             <div class="p-6 rounded-2xl border border-indigo-500/30 bg-indigo-500/10 backdrop-blur-sm flex flex-col gap-2">
                 <span class="text-xs text-indigo-300 uppercase tracking-widest">Net Balance</span>
-                <span class="text-2xl font-bold text-white">R$ 12.450,00</span>
+                <span class="text-2xl font-bold text-white">R$ {{number_format($currentValue, 2, '.', ',')}}</span>
                 <span class="text-xs text-indigo-300">↑ 12% since last month</span>
             </div>
         </div>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\IncomesController;
 use App\Http\Controllers\UserController;
 use App\Models\User;
@@ -19,9 +20,7 @@ Route::prefix('dashboard')->group(function () {
 
     Route::post('incomes/send', [IncomesController::class, 'store']);
 
-    Route::get('history', function () {
-        return view('webSite.partials.history');
-    });
+    Route::get('history', [HistoryController::class, 'index']);
 
     Route::get('expenses', [ExpenseController::class, 'show']);
 
