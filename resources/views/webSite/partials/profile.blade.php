@@ -43,17 +43,17 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="flex flex-col gap-2">
                             <label class="text-xs uppercase tracking-widest text-gray-500">First Name</label>
-                            <input type="text" value="Gabriel" class="px-5 py-4 bg-[#080616] border border-white/10 rounded-2xl text-white outline-none focus:border-indigo-500">
+                            <input type="text"  class="px-5 py-4 bg-[#080616] border border-white/10 rounded-2xl text-white outline-none focus:border-indigo-500">
                         </div>
                         <div class="flex flex-col gap-2">
                             <label class="text-xs uppercase tracking-widest text-gray-500">Last Name</label>
-                            <input type="text" value="Silva" class="px-5 py-4 bg-[#080616] border border-white/10 rounded-2xl text-white outline-none focus:border-indigo-500">
+                            <input type="text"  class="px-5 py-4 bg-[#080616] border border-white/10 rounded-2xl text-white outline-none focus:border-indigo-500">
                         </div>
                     </div>
 
                     <div class="flex flex-col gap-2">
                         <label class="text-xs uppercase tracking-widest text-gray-500">Email Address</label>
-                        <input type="email" value="gabriel@clarifi.com" class="px-5 py-4 bg-[#080616] border border-white/10 rounded-2xl text-white outline-none focus:border-indigo-500">
+                        <input type="email" value="{{$user->email}}" class="px-5 py-4 bg-[#080616] border border-white/10 rounded-2xl text-white outline-none focus:border-indigo-500">
                     </div>
 
                     <div class="pt-4 flex justify-end gap-4">
