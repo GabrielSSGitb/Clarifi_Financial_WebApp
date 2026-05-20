@@ -33,5 +33,7 @@ Route::prefix('dashboard')->group(function () {
 
     Route::get('profile', function () {
         return view('webSite.partials.profile', ['user' => Auth::user(), 'role' => role::query()->where('id', Auth::id())->first()]);
-    });
+    })->name('profile');
+
+    Route::post('profile', [UserController::class, 'update'])->name('profile.update');
 });

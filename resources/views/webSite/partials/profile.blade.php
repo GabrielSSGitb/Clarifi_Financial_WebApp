@@ -38,12 +38,12 @@
             <div class="lg:col-span-2 p-8 rounded-[2.5rem] bg-white/5 border border-white/10 shadow-2xl">
                 <h2 class="text-xl font-bold text-white mb-8">Personal Information</h2>
 
-                <form action="#" method="POST" class="flex flex-col gap-6">
+                <form action="{{route('profile.update')}}" method="POST" class="flex flex-col gap-6">
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="flex flex-col gap-2">
                             <label class="text-xs uppercase tracking-widest text-gray-500">First Name</label>
-                            <input type="text"  class="px-5 py-4 bg-[#080616] border border-white/10 rounded-2xl text-white outline-none focus:border-indigo-500">
+                            <input type="text" name="name" class="px-5 py-4 bg-[#080616] border border-white/10 rounded-2xl text-white outline-none focus:border-indigo-500">
                         </div>
                         <div class="flex flex-col gap-2">
                             <label class="text-xs uppercase tracking-widest text-gray-500">Last Name</label>
@@ -53,7 +53,7 @@
 
                     <div class="flex flex-col gap-2">
                         <label class="text-xs uppercase tracking-widest text-gray-500">Email Address</label>
-                        <input type="email" value="{{$user->email}}" class="px-5 py-4 bg-[#080616] border border-white/10 rounded-2xl text-white outline-none focus:border-indigo-500">
+                        <input type="email" name="email" value="{{$user->email}}" class="px-5 py-4 bg-[#080616] border border-white/10 rounded-2xl text-white outline-none focus:border-indigo-500">
                     </div>
 
                     <div class="pt-4 flex justify-end gap-4">

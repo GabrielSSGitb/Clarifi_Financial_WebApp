@@ -51,4 +51,14 @@ class UserController extends Controller
 
         return view('webSite.home', compact(['currentUser', 'currentValue']));
     }
+
+    public function update(Request $request) {
+
+        User::query()->where('id', Auth::id())->update([
+            'name' => $request->name,
+            'email' => $request->email,
+        ]);
+
+       return redirect('/')->with('User updated successfully');
+    }
 }
