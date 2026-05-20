@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Incomes;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;

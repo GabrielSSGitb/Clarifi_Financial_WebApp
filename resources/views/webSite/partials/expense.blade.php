@@ -33,6 +33,7 @@
                                 class="w-full px-5 py-4 bg-[#080616] border border-white/10 rounded-xl text-white focus:border-indigo-500 outline-none transition-all appearance-none">
                             <option value="Clothing">Clothing</option>
                             <option value="School">School</option>
+                            <option value="food">Food</option>
                             <option value="gift">Gift</option>
                             <option value="other">Other</option>
                         </select>
