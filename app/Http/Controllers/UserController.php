@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Expense;
 use App\Models\Incomes;
 use App\Models\User;
+use http\Exception\RuntimeException;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,26 +22,33 @@ class UserController extends Controller
     /**
      * @throws \Exception
      */
-    public function currentValue($currentUserId, $currentUser) {
+    public function currentValue($currentUserId, $currentUser)
+    {
 
-        $userIncomes = Incomes::query()->where('user_id', '=', $currentUserId)->get()->toArray();
-        $userExpenses = Expense::query()->where('user_id', '=', $currentUserId)->get()->toArray();
-        $currentValue = 0.00;
+        $currentMonth = date('m');
 
-        if(!empty($userExpenses) && !empty($userIncomes)) {
-            foreach ($userExpenses as $expense) {
-                $currentValue -= $expense['amount'];
-            }
-            foreach ($userIncomes as $income) {
-                $currentValue += $income['amount'];
-            }
-        }else if(!empty($userExpenses)) {
-            foreach ($userIncomes as $income) {
-                $currentValue += $income['amount'];
-            }
-        }else {
-            throw new \Exception('Nothing on the database to display');
+        $currentYear = date('Y');
+
+        $userIncomes = Incomes::query()
+            ->where('user_id', $currentUserId)
+            ->whereMonth('date', $currentMonth)
+            ->whereYear('date', $currentYear)
+            ->sum('amount');
+
+        $userExpenses = Expense::query()
+            ->where('user_id', $currentUserId)
+            ->whereMonth('date', $currentMonth)
+            ->whereYear('date', $currentYear)
+            ->sum('amount');
+
+        $daysInMouth = Date('t');
+
+        $currentValue = $userIncomes - $userExpenses;
+
+        if(Date('d') == $daysInMouth) {
+            Incomes::query()->where('user_id', $currentUserId)->latest('MouthLastIncomesTotal')->update(['MouthLastIncomesTotal' => $currentValue]);
         }
-        return view('webSite.home', compact('currentUser', 'currentValue'));
+
+        return view('webSite.home', compact(['currentUser', 'currentValue']));
     }
 }
