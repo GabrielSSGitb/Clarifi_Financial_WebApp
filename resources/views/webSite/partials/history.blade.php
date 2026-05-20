@@ -9,9 +9,12 @@
                 <h1 class="history-title">Transaction History</h1>
                 <p class="history-subtitle">A detailed overview of all your financial activity.</p>
             </div>
-            <div class="header-actions">
-                <button class="btn-secondary">Export CSV</button>
-            </div>
+            <form action="{{route('exportCSV')}}" method="POST">
+                @csrf
+                <div class="header-actions">
+                    <button class="btn-secondary" type="submit">Export CSV</button>
+                </div>
+            </form>
         </div>
 
         {{-- Summary Cards --}}

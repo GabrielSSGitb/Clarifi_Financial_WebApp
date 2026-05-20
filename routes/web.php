@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\ExportCSVController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\IncomesController;
 use App\Http\Controllers\InvestmentsController;
@@ -22,7 +23,9 @@ Route::prefix('dashboard')->group(function () {
 
     Route::post('incomes/send', [IncomesController::class, 'store']);
 
-    Route::get('history', [HistoryController::class, 'index']);
+    Route::get('history', [HistoryController::class, 'index'])->name('history');
+
+    Route::post('history/csv', [ExportCSVController::class, 'exportDataWithCSV'])->name('exportCSV');
 
     Route::get('expenses', [ExpenseController::class, 'show']);
 
