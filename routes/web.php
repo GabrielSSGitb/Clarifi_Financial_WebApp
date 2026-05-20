@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ExportCSVController;
 use App\Http\Controllers\HistoryController;
@@ -19,19 +20,23 @@ Route::get('/', [UserController::class, 'index'])->middleware(['auth', 'verified
 
 Route::prefix('dashboard')->group(function () {
 
-    Route::get('incomes', [IncomesController::class, 'show']);
+    Route::get('incomes', [IncomesController::class, 'show'])->name('dashboard.incomes');
 
-    Route::post('incomes/send', [IncomesController::class, 'store']);
+    Route::post('incomes/send', [IncomesController::class, 'store'])->name('dashboard.incomes.send');
 
-    Route::get('history', [HistoryController::class, 'index'])->name('history');
+    Route::get('history', [HistoryController::class, 'index'])->name('dashboard.history');
 
     Route::post('history/csv', [ExportCSVController::class, 'exportDataWithCSV'])->name('exportCSV');
 
-    Route::get('expenses', [ExpenseController::class, 'show']);
+    Route::get('expenses', [ExpenseController::class, 'show'])->name('dashboard.expenses');
 
-    Route::post('expenses/send', [ExpenseController::class, 'store']);
+    Route::post('expenses/send', [ExpenseController::class, 'store'])->name('dashboard.expenses.send');
 
-    Route::get('investments', [InvestmentsController::class, 'index'])->name('investments.index');
+    Route::get('calendar', [CalendarController::class, 'index'])->name('dashboard.calendar');
+
+    Route::post('/dashboard/calendar/save', [CalendarController::class, 'store'])->name('dashboard.calendar.save');
+
+    Route::get('investments', [InvestmentsController::class, 'index'])->name('dashboard.investments');
 
     Route::get('profile', function () {
         return view('webSite.partials.profile', ['user' => Auth::user(), 'role' => role::query()->where('id', Auth::id())->first()]);
