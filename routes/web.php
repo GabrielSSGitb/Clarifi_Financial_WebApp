@@ -34,6 +34,8 @@ Route::prefix('dashboard')->group(function () {
 
     Route::get('calendar', [CalendarController::class, 'index'])->name('dashboard.calendar');
 
+    Route::post('/dashboard/calendar/save', [CalendarController::class, 'store'])->name('dashboard.calendar.save');
+
     Route::get('investments', [InvestmentsController::class, 'index'])->name('dashboard.investments');
 
     Route::get('profile', function () {

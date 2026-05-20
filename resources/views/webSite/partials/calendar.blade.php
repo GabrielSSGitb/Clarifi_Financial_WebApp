@@ -63,14 +63,14 @@
                 <button onclick="closeNoteModal()" class="close-btn">&times;</button>
             </div>
 
-            <form id="noteForm" action="/dashboard/calendar/save" method="POST">
+            <form id="noteForm" action="{{route('dashboard.calendar.save')}}" method="POST">
                 @csrf
                 <input type="hidden" id="noteId" name="id">
                 <input type="hidden" id="noteDate" name="date">
 
                 <div class="form-group">
                     <label class="form-label" for="selectedDateDisplay">Selected Date</label>
-                    <input type="text" id="selectedDateDisplay" class="form-input text-muted" readonly>
+                    <input type="text" name="selectedDate" id="selectedDateDisplay" class="form-input text-muted" readonly>
                 </div>
 
                 <div class="form-group">
