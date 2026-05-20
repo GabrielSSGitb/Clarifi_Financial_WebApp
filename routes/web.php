@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ExportCSVController;
 use App\Http\Controllers\HistoryController;
@@ -30,6 +31,8 @@ Route::prefix('dashboard')->group(function () {
     Route::get('expenses', [ExpenseController::class, 'show']);
 
     Route::post('expenses/send', [ExpenseController::class, 'store']);
+
+    Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
 
     Route::get('investments', [InvestmentsController::class, 'index'])->name('investments.index');
 
