@@ -3,6 +3,7 @@
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\IncomesController;
+use App\Http\Controllers\InvestmentsController;
 use App\Http\Controllers\UserController;
 use App\Models\role;
 use App\Models\User;
@@ -27,9 +28,7 @@ Route::prefix('dashboard')->group(function () {
 
     Route::post('expenses/send', [ExpenseController::class, 'store']);
 
-    Route::get('investments', function () {
-        return view('webSite.partials.investments');
-    });
+    Route::get('investments', [InvestmentsController::class, 'index'])->name('investments.index');
 
     Route::get('profile', function () {
         return view('webSite.partials.profile', ['user' => Auth::user(), 'role' => role::query()->where('id', Auth::id())->first()]);
