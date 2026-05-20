@@ -66,7 +66,7 @@
                 <tbody id="transactionsBody" class="table-body">
 
                 @foreach($incomes as $income)
-                    <tr class="transaction-row row-income" data-type="income" data-desc="Freelance Project">
+                    <tr class="transaction-row row-income" data-type="income" data-desc="{{$income->description}}">
                         <td class="td-cell">
                             <div class="description-block">
                                 <div class="icon-box box-income">
@@ -83,7 +83,7 @@
 
                 @foreach($expenses as $expense)
                     @if($expense->category == 'food')
-                        <tr class="transaction-row row-expense" data-type="expense" data-desc="Grocery Store">
+                        <tr class="transaction-row row-expense" data-type="expense" data-desc="{{$expense->description}}">
                             <td class="td-cell">
                                 <div class="description-block">
                                     <div class="icon-box box-food">
@@ -97,19 +97,41 @@
                             <td class="td-cell text-right font-bold value-expense">- R$ {{number_format($expense->amount, 2, '.', ',')}}</td>
                         </tr>
                     @endif
-                    <tr class="transaction-row row-expense" data-type="expense" data-desc="Netflix Subscription">
-                        <td class="td-cell">
-                            <div class="description-block">
-                                <div class="icon-box box-expense">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
+
+                    @if($expense->category == 'investment')
+                        <tr class="transaction-row row-expense" data-type="expense" data-desc="{{$expense->description}}">
+                            <td class="td-cell">
+                                <div class="description-block">
+                                    <div class="icon-box box-investment">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="svg-icon">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
+                                        </svg>
+                                    </div>
+                                    <span class="description-title">{{$expense->description}}</span>
                                 </div>
-                                <span class="description-title">{{$expense->description}}</span>
-                            </div>
-                        </td>
-                        <td class="td-cell"><span class="badge badge-expense">{{$expense->category}}</span></td>
-                        <td class="td-cell text-muted text-sm">{{$expense->date->format("d-m-Y")}}</td>
-                        <td class="td-cell text-right font-bold value-expense">- R$ {{number_format($expense->amount, 2, '.', ',')}}</td>
-                    </tr>
+                            </td>
+                            <td class="td-cell"><span class="badge badge-investment">Investment</span></td>
+                            <td class="td-cell text-muted text-sm">{{$expense->date->format("d-m-Y")}}</td>
+                            <td class="td-cell text-right font-bold value-expense">- R$ {{number_format($expense->amount, 2, '.', ',')}}</td>
+                        </tr>
+                    @endif
+
+                    {{-- Outros tipos de despesas padrão --}}
+                    @if($expense->category != 'food' && $expense->category != 'investment')
+                        <tr class="transaction-row row-expense" data-type="expense" data-desc="{{$expense->description}}">
+                            <td class="td-cell">
+                                <div class="description-block">
+                                    <div class="icon-box box-expense">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
+                                    </div>
+                                    <span class="description-title">{{$expense->description}}</span>
+                                </div>
+                            </td>
+                            <td class="td-cell"><span class="badge badge-expense">{{$expense->category}}</span></td>
+                            <td class="td-cell text-muted text-sm">{{$expense->date->format("d-m-Y")}}</td>
+                            <td class="td-cell text-right font-bold value-expense">- R$ {{number_format($expense->amount, 2, '.', ',')}}</td>
+                        </tr>
+                    @endif
                 @endforeach
 
                 <tr id="emptyState" class="hidden">
@@ -197,7 +219,6 @@
             background-color: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(4px);
             display: flex;
-            flex-col: column;
             flex-direction: column;
             gap: 0.5rem;
         }
@@ -320,10 +341,7 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
-        .table-body {
-            border-top: 0px solid;
-        }
-        .table-body > tr + tr {
+        .table-body tr + tr {
             border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
         .transaction-row {
@@ -341,7 +359,7 @@
             gap: 0.75rem;
         }
 
-        /* --- CLASSES PARA ALIMENTAR DINAMICAMENTE COM O BANCO --- */
+        /* --- CLASSES DINÂMICAS --- */
         .description-title {
             font-weight: 500;
             color: #ffffff;
@@ -355,22 +373,32 @@
             height: 1.25rem;
             display: block;
         }
+
+        /* Cores dos Ícones (Fundo e SVG) */
         .box-income { background-color: rgba(52, 211, 153, 0.2); color: #34d399; }
         .box-expense { background-color: rgba(248, 113, 113, 0.2); color: #f87171; }
         .box-food { background-color: rgba(251, 146, 60, 0.2); color: #fb923c; }
         .box-yellow { background-color: rgba(250, 204, 21, 0.2); color: #facc15; }
         .box-purple { background-color: rgba(192, 132, 252, 0.2); color: #c084fc; }
 
+        /* NOVA CLASSE: Ícone de Investimento (Estilo Ciano Elétrico) */
+        .box-investment { background-color: rgba(6, 182, 212, 0.2); color: #06b6d4; }
+
+        /* Badges de Categoria */
         .badge {
             padding: 0.25rem 0.5rem;
             font-size: 0.75rem;
             border-radius: 0.5rem;
+            display: inline-block;
         }
         .badge-income { background-color: rgba(52, 211, 153, 0.1); color: #34d399; }
         .badge-expense { background-color: rgba(248, 113, 113, 0.1); color: #f87171; }
         .badge-food { background-color: rgba(251, 146, 60, 0.1); color: #fb923c; }
         .badge-yellow { background-color: rgba(250, 204, 21, 0.1); color: #facc15; }
         .badge-purple { background-color: rgba(192, 132, 252, 0.1); color: #c084fc; }
+
+        /* NOVA CLASSE: Badge de Investimento */
+        .badge-investment { background-color: rgba(6, 182, 212, 0.1); color: #06b6d4; }
 
         /* --- EMPTY STATE & FOOTER --- */
         .empty-state-cell {
@@ -394,7 +422,7 @@
             justify-content: space-between;
             align-items: center;
             font-size: 0.875rem;
-            color: #4b5563;
+            color: #6b7280;
         }
         .footer-actions { display: flex; gap: 0.5rem; }
         .btn-pagination {
