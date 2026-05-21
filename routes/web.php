@@ -3,6 +3,7 @@
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ExportCSVController;
+use App\Http\Controllers\ExportExcelFileController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\IncomesController;
 use App\Http\Controllers\InvestmentsController;
@@ -27,6 +28,8 @@ Route::prefix('dashboard')->group(function () {
     Route::get('history', [HistoryController::class, 'index'])->name('dashboard.history');
 
     Route::post('history/csv', [ExportCSVController::class, 'exportDataWithCSV'])->name('exportCSV');
+
+    Route::post('history/xlsx', [ExportExcelFileController::class, 'export'])->name('exportExcel');
 
     Route::get('expenses', [ExpenseController::class, 'show'])->name('dashboard.expenses');
 
