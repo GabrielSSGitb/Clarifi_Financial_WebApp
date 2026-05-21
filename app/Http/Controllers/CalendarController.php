@@ -14,6 +14,7 @@ class CalendarController extends Controller
             ->orderBy('date', 'asc')
             ->get();
 
+        $this->destroy();
         return view('webSite.partials.calendar', compact('annotations'));
     }
 
@@ -31,5 +32,18 @@ class CalendarController extends Controller
           ]);
 
           return redirect()->route('dashboard.calendar');
+    }
+
+    public function destroy()
+    {
+        $allAnnotations = Annotation::all();
+        $daysInMounth = date('t');
+        $currentDay = date('d');
+
+        if($daysInMounth == $currentDay) {
+            foreach ($allAnnotations as $annotation) {
+                $annotation->delete();
+            }
+        }
     }
 }

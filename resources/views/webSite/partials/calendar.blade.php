@@ -1,8 +1,8 @@
+@php use App\Models\Annotation; @endphp
 @extends('webSite.layouts.basicSetup')
 
 @section('content')
     <section class="calendar-section">
-
         {{-- Header --}}
         <div class="calendar-header">
             <div>
@@ -80,7 +80,6 @@
 
                 <div class="modal-footer">
                     <button type="button" onclick="closeNoteModal()" class="btn-secondary">Cancel</button>
-                    <button type="button" class="text-white bg-danger box-border border border-transparent hover:bg-danger-strong focus:ring-4 focus:ring-danger-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none cursor-pointer">Remove Note</button>
                     <button type="submit" class="btn-primary">Save Note</button>
                 </div>
             </form>
