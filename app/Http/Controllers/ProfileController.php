@@ -28,7 +28,6 @@ class ProfileController extends Controller
             'avatar' => $path
         ]);
 
-        // 5. Retorna a resposta JSON contendo a URL pública para o JavaScript injetar na view
         return response()->json([
             'success' => true,
             'url' => asset('storage/' . $path)
