@@ -7,9 +7,11 @@
                 <h1 class="text-4xl font-bold text-white tracking-tight">Investments</h1>
                 <p class="text-gray-500 mt-2">Grow your wealth with smart asset allocation.</p>
             </div>
-            <button class="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl transition-all shadow-lg shadow-indigo-500/20 active:scale-95">
-                + New Asset
-            </button>
+            <a href="{{route('dashboard.expenses')}}">
+                <button class="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl transition-all shadow-lg shadow-indigo-500/20 active:scale-95">
+                    + New Asset
+                </button>
+            </a>
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
