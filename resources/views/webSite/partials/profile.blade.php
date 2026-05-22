@@ -3,16 +3,29 @@
 @section('content')
     <section class="max-w-5xl mx-auto pb-20">
         <header class="mb-12 flex flex-col md:flex-row items-center gap-8 bg-white/5 p-10 rounded-[3rem] border border-white/10 backdrop-blur-md">
-            <div class="relative group">
-                <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-indigo-500 shadow-lg shadow-indigo-500/20">
-                    <img src="#" alt="Profile" class="w-full h-full object-cover">
+
+
+            <div class="relative group cursor-pointer" id="avatarContainer">
+
+
+                <input type="file" id="avatarInput" accept="image/*" class="hidden">
+
+
+                <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-indigo-500 shadow-lg shadow-indigo-500/20 bg-[#080616]">
+
+                    <img id="avatarPreview"
+                         src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('build/assets/images/default-avatar.png') }}"
+                         alt="Profile"
+                         class="w-full h-full object-cover">
                 </div>
-                <button class="absolute bottom-0 right-0 p-2 bg-indigo-600 rounded-full text-white border-2 border-[#080616] hover:scale-110 transition cursor-pointer">
+
+
+                <div class="absolute bottom-0 right-0 p-2 bg-indigo-600 rounded-full text-white border-2 border-[#080616] hover:scale-110 transition pointer-events-none">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15a2.25 2.25 0 0 0 2.25-2.25V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
                     </svg>
-                </button>
+                </div>
             </div>
 
             <div class="text-center md:text-left">
@@ -64,4 +77,54 @@
             </div>
         </div>
     </section>
+
+    <script>
+
+        try {
+            const avatarContainer = document.getElementById('avatarContainer');
+            const avatarInput = document.getElementById('avatarInput');
+            const avatarPreview = document.getElementById('avatarPreview');
+
+            avatarContainer.addEventListener('click', () => avatarInput.click());
+
+            avatarInput.addEventListener('change', function () {
+                const file = this.files[0];
+                if(!file) return;
+
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('The image must have 2MB');
+                    return;
+                };
+
+                const formData = new FormData();
+                formData.append('avatar', file);
+
+                formData.append('_token', '{{csrf_token()}}');
+
+                avatarPreview.style.opacity = '0.5';
+
+                fetch("{{route('profile.avatar.update')}}", {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                    .then(response => {
+                        if(!response.ok) throw new Error('Server Error');
+                        return response.json();
+
+                    }).then(data => {
+                    avatarPreview.src = data.url;
+                    avatarPreview.style.opacity = '1';
+                }).catch(error => {
+                    console.error(error);
+                    alert('Failed to update the avatar');
+                    avatarPreview.style.opacity = '1';
+                });
+            });
+        }catch (error) {
+            console.log(error)
+        }
+    </script>
 @endsection

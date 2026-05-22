@@ -7,6 +7,7 @@ use App\Http\Controllers\ExportExcelFileController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\IncomesController;
 use App\Http\Controllers\InvestmentsController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Models\role;
 use App\Models\User;
@@ -46,4 +47,6 @@ Route::prefix('dashboard')->group(function () {
     })->name('profile');
 
     Route::post('profile', [UserController::class, 'update'])->name('profile.update');
+
+    Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar.update');
 });
