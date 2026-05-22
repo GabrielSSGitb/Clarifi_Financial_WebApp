@@ -11,8 +11,10 @@ class InvestmentsController extends Controller
 {
     public function index()
     {
-        $investmentsValues = Expense::find(Auth::id());
+        $investments = Expense::where('user_id', auth()->id())
+            ->where('category', 'investment')
+            ->get();
 
-        return view('webSite.partials.investments', compact('investmentsValues'));
+        return view('webSite.partials.investments', compact('investments'));
     }
 }

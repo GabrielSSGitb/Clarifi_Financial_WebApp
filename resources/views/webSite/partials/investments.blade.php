@@ -38,42 +38,32 @@
             </div>
         </div>
 
+        @php
+            $random = rand(1,2);
+        @endphp
+
         <div class="p-8 rounded-3xl border border-white/10 bg-white/5 shadow-2xl">
             <h2 class="text-xl font-semibold text-white mb-6">Your Portfolio</h2>
-
-            <div class="flex flex-col gap-4">
-                <div class="flex items-center justify-between p-5 rounded-2xl bg-[#080616] border border-white/5 hover:border-indigo-500/50 transition-all cursor-pointer">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center font-bold text-indigo-400 border border-white/10">
-                            AAPL
+            @foreach($investments as $inv)
+                <div class="flex flex-col gap-4">
+                    <div class="flex items-center justify-between p-5 rounded-2xl bg-[#080616] border border-white/5 hover:border-indigo-500/50 transition-all cursor-pointer mb-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center font-bold
+                       @if($random == 1) text-indigo-400 border @else text-emerald-400 border @endif
+                        border-white/10">
+                                {{$inv->description}}
+                            </div>
+                            <div>
+                                <div class="text-white font-bold">{{$inv->description}} - investments</div>
+                            </div>
                         </div>
-                        <div>
-                            <div class="text-white font-bold">Apple Inc.</div>
-                            <div class="text-gray-500 text-xs">12 Shares • Avg R$ 150,00</div>
+                        <div class="text-right">
+                            <div class="text-white font-bold">R$ {{number_format($inv->amount, 2, '.', ',')}}</div>
+                            <div class="text-emerald-400 text-xs">+ 4.2%</div>
                         </div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-white font-bold">R$ 10.450,20</div>
-                        <div class="text-emerald-400 text-xs">+ 4.2%</div>
                     </div>
                 </div>
-
-                <div class="flex items-center justify-between p-5 rounded-2xl bg-[#080616] border border-white/5 hover:border-indigo-500/50 transition-all cursor-pointer">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center font-bold text-emerald-400 border border-white/10">
-                            MXRF
-                        </div>
-                        <div>
-                            <div class="text-white font-bold">MXRF11</div>
-                            <div class="text-gray-500 text-xs">150 Shares • Avg R$ 10,20</div>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-white font-bold">R$ 1.540,50</div>
-                        <div class="text-red-400 text-xs">- 0.8%</div>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
     </section>
 @endsection
