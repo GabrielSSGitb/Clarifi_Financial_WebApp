@@ -27,17 +27,6 @@
                 <span class="text-3xl font-bold text-white">R$ 312,40</span>
                 <div class="mt-4 text-gray-500 text-sm">Yield: 0.8% average</div>
             </div>
-
-            <div class="p-6 rounded-3xl border border-white/10 bg-white/5">
-                <h2 class="text-gray-400 text-xs uppercase tracking-widest mb-4">Target (Year End)</h2>
-                <div class="w-full bg-white/5 h-2 rounded-full mt-4 overflow-hidden">
-                    <div class="bg-indigo-500 h-full w-[65%] shadow-[0_0_10px_rgba(99,102,241,0.5)]"></div>
-                </div>
-                <div class="flex justify-between mt-2 text-xs">
-                    <span class="text-indigo-400">65% Reached</span>
-                    <span class="text-gray-500">Goal: R$ 70k</span>
-                </div>
-            </div>
         </div>
 
         @php
