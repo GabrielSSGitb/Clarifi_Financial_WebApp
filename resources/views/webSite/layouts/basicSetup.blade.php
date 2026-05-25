@@ -83,7 +83,7 @@
 
         <div class="grid grid-cols-4 gap-2 text-sm font-semibold">
             <button class="calc-btn bg-white/5 hover:bg-white/10 text-red-400 p-3 rounded-xl transition active:scale-95" data-action="clear">C</button>
-            <button class="calc-btn bg-white/5 hover:bg-white/10 text-indigo-400 p-3 rounded-xl flex items-center justify-center transition active:scale-95" data-action="delete">
+            <button  id="deleteLineBtn" class="bg-white/5 hover:bg-white/10 text-indigo-400 p-3 rounded-xl flex items-center justify-center transition active:scale-95">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9.75 14.25 12m0 0 2.25 2.25M14.25 12l2.25-2.25M14.25 12 12 14.25m-2.58 4.92-6.374-6.375a1.125 1.125 0 0 1 0-1.59L9.42 4.83c.21-.211.497-.33.795-.33H19.5a2.25 2.25 0 0 1 2.25 2.25v10.5a2.25 2.25 0 0 1-2.25 2.25h-9.284c-.298 0-.585-.119-.795-.33Z" />
                 </svg>
@@ -108,7 +108,7 @@
 
             <button class="calc-btn bg-white/5 hover:bg-white/10 text-white p-3 rounded-xl transition active:scale-95" data-val="0">0</button>
             <button class="calc-btn bg-white/5 hover:bg-white/10 text-white p-3 rounded-xl transition active:scale-95" data-val=".">.</button>
-            <button class="calc-btn col-span-2 bg-indigo-600 hover:bg-indigo-500 text-white p-3 rounded-xl transition shadow-lg shadow-indigo-600/20 active:scale-95 text-center font-bold" data-action="equals">=</button>
+            <button id="equalBtn"  class="col-span-2 bg-indigo-600 hover:bg-indigo-500 text-white p-3 rounded-xl transition shadow-lg shadow-indigo-600/20 active:scale-95 text-center font-bold">=</button>
         </div>
     </section>
 
@@ -118,6 +118,7 @@
         </svg>
     </button>
 </div>
+
 <script src="@vite('resources/js/calculatorDisplay.js')"></script>
 <script src="@vite('resources/js/calculatorFunctions.js')"></script>
 </body>
