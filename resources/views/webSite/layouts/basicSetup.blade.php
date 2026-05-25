@@ -72,5 +72,53 @@
     @yield('content')
 </main>
 
+<div class="fixed bottom-20 right-6 md:bottom-6 md:right-6 z-[100] flex flex-col items-end gap-4 font-sans">
+
+    <section id="globalCalculator" class="hidden w-72 p-5 rounded-3xl border border-white/10 bg-[#1A1953]/30 backdrop-blur-xl shadow-2xl shadow-indigo-900/40 transition-all duration-300 transform scale-95 origin-bottom-right">
+
+        <div class="mb-4 bg-[#080616]/60 border border-white/5 rounded-2xl p-4 text-right overflow-hidden">
+            <div id="calcHistory" class="text-xs text-gray-500 min-h-[1rem] tracking-wide truncate"></div>
+            <div id="calcDisplay" class="text-2xl font-bold text-white tracking-tight mt-1 truncate">0</div>
+        </div>
+
+        <div class="grid grid-cols-4 gap-2 text-sm font-semibold">
+            <button class="calc-btn bg-white/5 hover:bg-white/10 text-red-400 p-3 rounded-xl transition active:scale-95" data-action="clear">C</button>
+            <button class="calc-btn bg-white/5 hover:bg-white/10 text-indigo-400 p-3 rounded-xl flex items-center justify-center transition active:scale-95" data-action="delete">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9.75 14.25 12m0 0 2.25 2.25M14.25 12l2.25-2.25M14.25 12 12 14.25m-2.58 4.92-6.374-6.375a1.125 1.125 0 0 1 0-1.59L9.42 4.83c.21-.211.497-.33.795-.33H19.5a2.25 2.25 0 0 1 2.25 2.25v10.5a2.25 2.25 0 0 1-2.25 2.25h-9.284c-.298 0-.585-.119-.795-.33Z" />
+                </svg>
+            </button>
+            <button class="calc-btn bg-white/5 hover:bg-white/10 text-indigo-400 p-3 rounded-xl transition active:scale-95" data-val="^">^</button>
+            <button class="calc-btn bg-indigo-600/20 hover:bg-indigo-600/40 text-indigo-400 p-3 rounded-xl transition active:scale-95 font-bold" data-val="/">/</button>
+
+            <button class="calc-btn bg-white/5 hover:bg-white/10 text-white p-3 rounded-xl transition active:scale-95" data-val="7">7</button>
+            <button class="calc-btn bg-white/5 hover:bg-white/10 text-white p-3 rounded-xl transition active:scale-95" data-val="8">8</button>
+            <button class="calc-btn bg-white/5 hover:bg-white/10 text-white p-3 rounded-xl transition active:scale-95" data-val="9">9</button>
+            <button class="calc-btn bg-indigo-600/20 hover:bg-indigo-600/40 text-indigo-400 p-3 rounded-xl transition active:scale-95 font-bold" data-val="*">*</button>
+
+            <button class="calc-btn bg-white/5 hover:bg-white/10 text-white p-3 rounded-xl transition active:scale-95" data-val="4">4</button>
+            <button class="calc-btn bg-white/5 hover:bg-white/10 text-white p-3 rounded-xl transition active:scale-95" data-val="5">5</button>
+            <button class="calc-btn bg-white/5 hover:bg-white/10 text-white p-3 rounded-xl transition active:scale-95" data-val="6">6</button>
+            <button class="calc-btn bg-indigo-600/20 hover:bg-indigo-600/40 text-indigo-400 p-3 rounded-xl transition active:scale-95 font-bold" data-val="-">-</button>
+
+            <button class="calc-btn bg-white/5 hover:bg-white/10 text-white p-3 rounded-xl transition active:scale-95" data-val="1">1</button>
+            <button class="calc-btn bg-white/5 hover:bg-white/10 text-white p-3 rounded-xl transition active:scale-95" data-val="2">2</button>
+            <button class="calc-btn bg-white/5 hover:bg-white/10 text-white p-3 rounded-xl transition active:scale-95" data-val="3">3</button>
+            <button class="calc-btn bg-indigo-600/20 hover:bg-indigo-600/40 text-indigo-400 p-3 rounded-xl transition active:scale-95 font-bold" data-val="+">+</button>
+
+            <button class="calc-btn bg-white/5 hover:bg-white/10 text-white p-3 rounded-xl transition active:scale-95" data-val="0">0</button>
+            <button class="calc-btn bg-white/5 hover:bg-white/10 text-white p-3 rounded-xl transition active:scale-95" data-val=".">.</button>
+            <button class="calc-btn col-span-2 bg-indigo-600 hover:bg-indigo-500 text-white p-3 rounded-xl transition shadow-lg shadow-indigo-600/20 active:scale-95 text-center font-bold" data-action="equals">=</button>
+        </div>
+    </section>
+
+    <button id="toggleCalculatorBtn" class="w-14 h-14 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full flex items-center justify-center transition-all duration-200 shadow-xl shadow-indigo-600/30 active:scale-95 border border-white/10">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 pointer-events-none">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-3-2.25h.008v.008H12.75V15.75Zm0 2.25h.008v.008H12.75V18Zm-3-2.25h.008v.008H9.75V15.75Zm0 2.25h.008v.008H9.75V18ZM9.75 6h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 8.625 11.625v-4.5C8.625 6.504 9.124 6 9.75 6ZM3.75 6h.008v.008H3.75V6Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 9h.008v.008H3.75V9Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 3h.008v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 3h.008v.008H3.75V15Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 3h.008v.008H3.75V18Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+        </svg>
+    </button>
+</div>
+<script src="@vite('resources/js/calculatorDisplay.js')"></script>
+<script src="@vite('resources/js/calculatorFunctions.js')"></script>
 </body>
 </html>
