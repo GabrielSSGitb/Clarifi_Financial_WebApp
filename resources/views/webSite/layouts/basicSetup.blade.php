@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clarifi - Dashboard</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/calculator/calculatorDisplay.js', 'resources/js/calculator/calculatorFunctions'])
 </head>
 <body class="bg-[#080616] text-white flex flex-col md:flex-row min-h-screen font-sans pb-20 md:pb-0">
 
@@ -82,7 +82,7 @@
         </div>
 
         <div class="grid grid-cols-4 gap-2 text-sm font-semibold">
-            <button class="calc-btn bg-white/5 hover:bg-white/10 text-red-400 p-3 rounded-xl transition active:scale-95" data-action="clear">C</button>
+            <button id="clearScreenBtn"  class="bg-white/5 hover:bg-white/10 text-red-400 p-3 rounded-xl transition active:scale-95">C</button>
             <button  id="deleteLineBtn" class="bg-white/5 hover:bg-white/10 text-indigo-400 p-3 rounded-xl flex items-center justify-center transition active:scale-95">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9.75 14.25 12m0 0 2.25 2.25M14.25 12l2.25-2.25M14.25 12 12 14.25m-2.58 4.92-6.374-6.375a1.125 1.125 0 0 1 0-1.59L9.42 4.83c.21-.211.497-.33.795-.33H19.5a2.25 2.25 0 0 1 2.25 2.25v10.5a2.25 2.25 0 0 1-2.25 2.25h-9.284c-.298 0-.585-.119-.795-.33Z" />
@@ -118,8 +118,5 @@
         </svg>
     </button>
 </div>
-
-<script src="@vite('resources/js/calculatorDisplay.js')"></script>
-<script src="@vite('resources/js/calculatorFunctions.js')"></script>
 </body>
 </html>
