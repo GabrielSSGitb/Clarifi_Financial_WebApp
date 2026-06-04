@@ -94,7 +94,7 @@
                 if (file.size > 2 * 1024 * 1024) {
                     alert('The image must have 2MB');
                     return;
-                };
+                }
 
                 const formData = new FormData();
                 formData.append('avatar', file);
