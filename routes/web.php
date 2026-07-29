@@ -4,6 +4,7 @@ use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ExportCSVController;
 use App\Http\Controllers\ExportExcelFileController;
+use App\Http\Controllers\FutureTransactionsController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\IncomesController;
 use App\Http\Controllers\InvestmentsController;
@@ -25,6 +26,8 @@ Route::prefix('dashboard')->group(function () {
     Route::get('incomes', [IncomesController::class, 'show'])->name('dashboard.incomes');
 
     Route::post('incomes/send', [IncomesController::class, 'store'])->name('dashboard.incomes.send');
+
+    Route::get('futureTransactions', [FutureTransactionsController::class, 'index'])->name('dashboard.futureTransactions');
 
     Route::get('history', [HistoryController::class, 'index'])->name('dashboard.history');
 
