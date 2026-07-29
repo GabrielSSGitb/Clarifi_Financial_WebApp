@@ -30,7 +30,7 @@
 
             <div class="text-center md:text-left">
                 <h1 class="text-3xl font-bold text-white">{{$user->name}}</h1>
-                <p class="text-indigo-400">{{$role->name}} Member • Joined On {{$user->created_at->format('F')}} {{$user->created_at->format('Y')}}</p>
+                <p class="text-indigo-400">{{$user->name}} Member • Joined On {{$user->created_at->format('F')}} {{$user->created_at->format('Y')}}</p>
                 <div class="mt-4 flex gap-3 justify-center md:justify-start">
                     <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-xs font-bold rounded-full border border-emerald-500/20">Account Verified</span>
                     <span class="px-3 py-1 bg-white/5 text-gray-400 text-xs font-bold rounded-full border border-white/10">ID: #48291</span>
