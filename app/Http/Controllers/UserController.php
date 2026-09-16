@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\role;
 use App\Models\User;
 use App\Services\DashboardService;
 use Illuminate\Http\Request;
@@ -20,6 +21,14 @@ class UserController extends Controller
         $data = $dashboardService->getDashboardData($userId, $filterMonth, $filterYear);
 
         return view('webSite.home', $data);
+    }
+
+    public function profile()
+    {
+        return view('webSite.partials.profile', [
+            'user' => Auth::user(),
+            'role' => role::query()->where('id', Auth::id())->first(),
+        ]);
     }
 
     public function update(Request $request)

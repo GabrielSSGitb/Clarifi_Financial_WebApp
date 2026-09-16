@@ -11,7 +11,7 @@
 <aside class="group fixed bottom-0 left-0 w-full h-16 md:sticky md:top-0 md:w-20 md:hover:w-56 md:h-screen bg-[#1A1953]/40 md:bg-[#1A1953]/20 backdrop-blur-xl border-t md:border-t-0 md:border-r border-white/5 flex flex-row md:flex-col items-center md:items-start py-0 md:py-8 justify-around md:justify-start gap-0 md:gap-6 transition-all duration-300 overflow-hidden z-50">
 
     <div class="hidden md:flex w-full px-4 items-center gap-3 mb-2">
-        <img src="{{asset('build/assets/images/Clarifi_icon.png')}}" alt="Logo" class="w-10 h-10 object-contain flex-shrink-0">
+        <img src="{{asset('images/Clarifi_icon.png')}}" alt="Logo" class="w-10 h-10 object-contain flex-shrink-0">
         <span class="opacity-0 group-hover:opacity-100 whitespace-nowrap font-bold text-white text-lg transition-opacity duration-200 delay-100">DashBoard</span>
     </div>
 

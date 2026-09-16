@@ -10,15 +10,12 @@ use App\Http\Controllers\IncomesController;
 use App\Http\Controllers\InvestmentsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
-use App\Models\role;
-use App\Models\User;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 
 
 Route::get('/dashboard', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard')->middleware(['auth', 'verified']);
+Route::get('/', [UserController::class, 'index'])->middleware(['auth', 'verified']);
 
 
 Route::prefix('dashboard')->group(function () {
@@ -41,13 +38,11 @@ Route::prefix('dashboard')->group(function () {
 
     Route::get('calendar', [CalendarController::class, 'index'])->name('dashboard.calendar');
 
-    Route::post('/dashboard/calendar/save', [CalendarController::class, 'store'])->name('dashboard.calendar.save');
+    Route::post('calendar/save', [CalendarController::class, 'store'])->name('dashboard.calendar.save');
 
     Route::get('investments', [InvestmentsController::class, 'index'])->name('dashboard.investments');
 
-    Route::get('profile', function () {
-        return view('webSite.partials.profile', ['user' => Auth::user(), 'role' => role::query()->where('id', Auth::id())->first()]);
-    })->name('profile');
+    Route::get('profile', [UserController::class, 'profile'])->name('profile');
 
     Route::post('profile', [UserController::class, 'update'])->name('profile.update');
 

@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+set -e
+
+GREEN='\033[0;32m'
+NC='\033[0m'
+
+case "$1" in
+  dev)
+    echo -e "${GREEN}Iniciando ambiente de desenvolvimento ClariFi...${NC}"
+    docker compose up -d --build
+    echo -e "${GREEN}Limpando caches de um build anterior...${NC}"
+    docker compose exec -T app php artisan optimize:clear
+    echo -e "${GREEN}Aplicando migrations no banco...${NC}"
+    docker compose run --rm app php artisan migrate
+    echo -e "${GREEN}Aplicação rodando em: http://localhost:8000${NC}"
+    echo -e "${GREEN}Vite Dev Server rodando em: http://localhost:5173${NC}"
+    ;;
+
+  build)
+    echo -e "${GREEN}Gerando build de produção dos ativos de frontend...${NC}"
+    docker compose run --rm vite npm run build
+    echo -e "${GREEN}Otimizando rotas e cache do Laravel...${NC}"
+    docker compose run --rm app php artisan config:cache
+    docker compose run --rm app php artisan route:cache
+    docker compose run --rm app php artisan view:cache
+    echo -e "${GREEN}Build concluído com sucesso!${NC}"
+    ;;
+
+  down)
+    echo -e "${GREEN}Parando os containers do ClariFi...${NC}"
+    docker compose down
+    ;;
+
+  artisan)
+    shift
+    docker compose exec app php artisan "$@"
+    ;;
+
+  *)
+    echo "Uso: ./clarifi {dev|build|down|artisan}"
+    exit 1
+    ;;
+esac

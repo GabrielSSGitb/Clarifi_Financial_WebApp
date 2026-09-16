@@ -14,7 +14,7 @@
                 <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-indigo-500 shadow-lg shadow-indigo-500/20 bg-[#080616]">
 
                     <img id="avatarPreview"
-                         src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('build/assets/images/default-avatar.png') }}"
+                         src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('images/default-avatar.png') }}"
                          alt="Profile"
                          class="w-full h-full object-cover">
                 </div>
