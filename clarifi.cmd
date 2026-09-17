@@ -18,6 +18,23 @@ rem ============================================================
 setlocal
 set "PROJROOT=%~dp0"
 set "PROJROOT=%PROJROOT:~0,-1%"
-for /f "usebackq delims=" %%p in (`wsl wslpath -u "%PROJROOT%"`) do set "WSLPATH=%%p"
+
+rem Converte o caminho do Windows para o caminho WSL de forma
+rem mecanica (C:\Users\... -> /mnt/c/Users/...). NAO usamos
+rem "wsl wslpath" porque o Docker Desktop redireciona o caminho
+rem para um bind-mount interno (/mnt/wsl/docker-desktop-bind-mounts)
+rem que fica VAZIO quando montado nos containers.
+set "DRIVE=%PROJROOT:~0,1%"
+set "REST=%PROJROOT:~2%"
+set "REST=%REST:\=/%"
+set "WSLPATH="
+for %%d in (a b c d e f g h i j k l m n o p q r s t u v w x y z) do if /i "%DRIVE%"=="%%d" set "WSLPATH=/mnt/%%d/%REST%"
+
+if "%WSLPATH%"=="" (
+  echo [erro] Nao foi possivel converter o caminho do projeto: "%PROJROOT%"
+  endlocal
+  exit /b 1
+)
+
 wsl bash "%WSLPATH%/clarifi" %*
 endlocal

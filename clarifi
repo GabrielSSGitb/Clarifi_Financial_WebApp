@@ -11,21 +11,23 @@ case "$1" in
   dev)
     echo -e "${GREEN}Iniciando ambiente de desenvolvimento ClariFi...${NC}"
     docker compose up -d --build
+    echo -e "${GREEN}Aguardando o volume sincronizar (Docker Desktop)...${NC}"
+    for i in $(seq 1 60); do docker compose exec -T app test -f artisan 2>/dev/null && break; sleep 1; done
     echo -e "${GREEN}Limpando caches de um build anterior...${NC}"
     docker compose exec -T app php artisan optimize:clear
     echo -e "${GREEN}Aplicando migrations no banco...${NC}"
-    docker compose run --rm app php artisan migrate
+    docker compose run --rm app sh -c "while [ ! -f artisan ]; do sleep 1; done; php artisan migrate"
     echo -e "${GREEN}Aplicação rodando em: http://localhost:8000${NC}"
     echo -e "${GREEN}Vite Dev Server rodando em: http://localhost:5173${NC}"
     ;;
 
   build)
     echo -e "${GREEN}Gerando build de produção dos ativos de frontend...${NC}"
-    docker compose run --rm vite npm run build
+    docker compose run --rm vite sh -c "for i in \$(seq 1 60); do [ -f package.json ] && break; echo 'Aguardando sincronizacao do volume...'; sleep 1; done; npm install && npm run build"
     echo -e "${GREEN}Otimizando rotas e cache do Laravel...${NC}"
-    docker compose run --rm app php artisan config:cache
-    docker compose run --rm app php artisan route:cache
-    docker compose run --rm app php artisan view:cache
+    for task in config:cache route:cache view:cache; do
+      docker compose run --rm app sh -c "while [ ! -f artisan ]; do sleep 1; done; php artisan $task"
+    done
     echo -e "${GREEN}Build concluído com sucesso!${NC}"
     ;;
 

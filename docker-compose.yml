@@ -12,6 +12,7 @@ services:
             - ${PWD:-.}:/var/www
         ports:
             - "8000:8000"
+        command: sh -c "while [ ! -f artisan ]; do echo 'Aguardando sincronizacao do volume...'; sleep 1; done; php artisan serve --host=0.0.0.0 --port=8000"
         environment:
             DB_CONNECTION: pgsql
             DB_HOST: pgsql
@@ -50,7 +51,7 @@ services:
             - ${PWD:-.}:/var/www
         ports:
             - "5173:5173"
-        command: sh -c "npm install && npm run dev -- --host"
+        command: sh -c "while [ ! -f package.json ]; do echo 'Aguardando sincronizacao do volume...'; sleep 1; done; npm install && npm run dev -- --host"
 
 volumes:
     clarifi_pgsql_data:
