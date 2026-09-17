@@ -1,3 +1,5 @@
+name: clarifiapp
+
 services:
     app:
         build:
@@ -7,7 +9,7 @@ services:
         restart: unless-stopped
         working_dir: /var/www
         volumes:
-            - .:/var/www
+            - ${PWD:-.}:/var/www
         ports:
             - "8000:8000"
         environment:
@@ -45,7 +47,7 @@ services:
         container_name: clarifi_vite
         working_dir: /var/www
         volumes:
-            - .:/var/www
+            - ${PWD:-.}:/var/www
         ports:
             - "5173:5173"
         command: sh -c "npm install && npm run dev -- --host"
