@@ -35,7 +35,7 @@ jobs:
                   coverage: none
 
             - name: Instalar dependencias
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Verificar formatacao
               run: vendor/bin/pint --test
@@ -86,7 +86,7 @@ jobs:
                   coverage: none
 
             - name: Instalar dependencias
-              uses: ramsey/composer-install@v3
+              uses: ramsey/composer-install@v4
 
             - name: Preparar ambiente
               run: |
