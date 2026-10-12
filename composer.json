@@ -84,11 +84,8 @@
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
         },
-        "config": {
-            "platform": {
-                "php": "8.2.26"
-            },
-            "optimize-autoloader": true
+        "platform": {
+            "php": "8.4.0"
         }
     },
     "minimum-stability": "stable",

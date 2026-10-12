@@ -1,0 +1,77 @@
+name: Ambiente de desenvolvimento
+
+# Garante que "./clarifi dev" continua funcionando de ponta a ponta:
+# sobe a stack inteira do docker compose e so passa quando a
+# aplicacao e o Vite respondem.
+
+on:
+    push:
+        branches: [main, master, develop]
+        paths:
+            - "Dockerfile"
+            - "docker-compose.yml"
+            - "docker/**"
+            - "clarifi"
+            - "clarifi.ps1"
+            - "clarifi.cmd"
+            - "composer.lock"
+            - "package-lock.json"
+            - ".github/workflows/environment.yml"
+    pull_request:
+        paths:
+            - "Dockerfile"
+            - "docker-compose.yml"
+            - "docker/**"
+            - "clarifi"
+            - "clarifi.ps1"
+            - "clarifi.cmd"
+            - "composer.lock"
+            - "package-lock.json"
+            - ".github/workflows/environment.yml"
+    workflow_dispatch:
+
+concurrency:
+    group: env-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+
+jobs:
+    compose:
+        name: ./clarifi dev
+        runs-on: ubuntu-latest
+        timeout-minutes: 25
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Subir o ambiente
+              run: ./clarifi dev
+
+            - name: Verificar o health check da aplicacao
+              run: curl --fail --silent --show-error http://localhost:8000/up
+
+            - name: Verificar o Vite dev server
+              run: |
+                  for i in $(seq 1 60); do
+                      if curl --fail --silent --output /dev/null http://localhost:5173/@vite/client; then
+                          echo "Vite respondendo"
+                          exit 0
+                      fi
+                      sleep 5
+                  done
+                  echo "Vite nao respondeu a tempo" >&2
+                  docker compose logs vite
+                  exit 1
+
+            - name: Rodar a suite de testes dentro do container
+              run: ./clarifi test
+
+            - name: Logs em caso de falha
+              if: failure()
+              run: docker compose logs --tail=200
+
+            - name: Derrubar o ambiente
+              if: always()
+              run: ./clarifi down

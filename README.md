@@ -1,58 +1,116 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# ClariFi
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplicação web de controle financeiro pessoal (receitas, despesas, investimentos,
+planejamento futuro, histórico e calendário), construída com Laravel 11, Blade,
+Tailwind CSS v4 e Vite.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Subindo o ambiente
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Pré-requisito único: **Docker Desktop** rodando. PHP, Composer, Node e Postgres
+ficam todos dentro dos containers — não é preciso instalar nada na máquina.
 
 ```bash
-composer require laravel/boost --dev
+# Windows (PowerShell ou cmd)
+.\clarifi dev
 
-php artisan boost:install
+# Linux / macOS / WSL
+./clarifi dev
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+O comando cuida de tudo: cria o `.env` a partir do `.env.example`, constrói as
+imagens, instala as dependências PHP e JS, gera o `APP_KEY`, aplica as migrations
+e só devolve o terminal quando a aplicação responde.
 
-## Contributing
+| Serviço | Endereço |
+|---|---|
+| Aplicação | http://localhost:8000 |
+| Vite (HMR) | http://localhost:5173 |
+| Postgres | localhost:5432 |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+As portas podem ser trocadas via `APP_PORT`, `VITE_PORT` e `DB_PORT_FORWARD` no `.env`.
 
-## Code of Conduct
+## Build de produção
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+./clarifi build
+```
 
-## Security Vulnerabilities
+Compila os ativos de frontend (`public/build`) e constrói a imagem de produção
+`clarifi:local`, servida pelo [FrankenPHP](https://frankenphp.dev) na porta 8080:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+docker run --rm -p 8080:8080 --env-file .env clarifi:local
+```
 
-## License
+## Comandos
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Comando | O que faz |
+|---|---|
+| `clarifi dev` | sobe o ambiente completo de desenvolvimento |
+| `clarifi build` | compila os assets e a imagem de produção |
+| `clarifi down` | para e remove os containers |
+| `clarifi stop` | para os containers mantendo o estado |
+| `clarifi restart` | reinicia os containers |
+| `clarifi reset` | destrói containers **e volumes** e sobe do zero |
+| `clarifi ps` | estado dos containers |
+| `clarifi logs [serviço]` | acompanha os logs |
+| `clarifi test [args]` | roda a suíte de testes |
+| `clarifi lint` | formata o código com o Pint |
+| `clarifi lint --check` | falha se houver código fora do padrão (usado no CI) |
+| `clarifi artisan <args>` | `php artisan` dentro do container |
+| `clarifi composer <args>` | `composer` dentro do container |
+| `clarifi npm <args>` | `npm` dentro do container do Vite |
+| `clarifi shell [serviço]` | abre um shell (padrão: `app`) |
+| `clarifi migrate [args]` | aplica migrations |
+| `clarifi fresh` | `migrate:fresh` (apaga os dados) |
+
+## Arquitetura do ambiente
+
+```
+docker-compose.yml       app (PHP 8.4) + vite (Node 24) + pgsql (Postgres 16)
+Dockerfile               base -> dev -> assets -> production (multi-stage)
+docker/entrypoint.dev.sh bootstrap do container PHP (deps, chave, migrations)
+docker/entrypoint.node.sh bootstrap do container Node (npm ci + vite dev)
+clarifi / clarifi.ps1    orquestradores (bash e PowerShell)
+```
+
+Dois detalhes importantes:
+
+- `vendor/` e `node_modules/` ficam em **volumes nomeados**, separados do host.
+  Os binários nativos do Windows não são compatíveis com os containers Linux, e
+  essa separação evita o conflito — o que estiver instalado no host continua
+  disponível para a IDE.
+- O cache de configuração e rotas do Laravel **nunca** é gravado no bind mount.
+  Ele é gerado apenas dentro da imagem de produção; no ambiente de dev o
+  entrypoint roda `optimize:clear` a cada boot.
+
+## CI/CD
+
+Workflows em `.github/workflows`:
+
+| Workflow | Quando roda | O que faz |
+|---|---|---|
+| `ci.yml` | push em `main`/`master`/`develop`, tags `v*` e todo PR | Pint, PHPUnit sobre Postgres, build do Vite e build da imagem Docker |
+| `environment.yml` | mudanças no Docker/compose/launchers | sobe o ambiente com `./clarifi dev` e valida aplicação, Vite e testes |
+
+A imagem de produção é publicada no **GitHub Container Registry** em
+`ghcr.io/<owner>/<repo>` nos pushes para o branch padrão e em tags `v*`
+(em pull requests ela é apenas construída, nunca publicada). O publish usa o
+`GITHUB_TOKEN` — não é preciso configurar nenhum secret.
+
+`dependabot.yml` acompanha atualizações de Composer, npm, GitHub Actions e Docker.
+
+## Stack
+
+| Camada | Tecnologia |
+|---|---|
+| Backend | PHP 8.4, Laravel 11 |
+| Autenticação | Laravel Fortify (login, registro, 2FA, passkeys) |
+| Frontend | Blade, Tailwind CSS v4, Flowbite, Vite 8 |
+| Gráficos | Chart.js 4 |
+| Exportação | maatwebsite/excel (XLSX) e CSV nativo |
+| Banco | PostgreSQL 16 |
+| Formatação | Laravel Pint |
+| Testes | PHPUnit 11 |

@@ -1,48 +1,159 @@
 #!/usr/bin/env bash
-
-set -e
+# ===============================================================
+#  ClariFi - orquestrador do ambiente (Linux / macOS / WSL / CI)
+#
+#    ./clarifi dev      sobe o ambiente completo (um unico comando)
+#    ./clarifi build    build de producao (assets + imagem Docker)
+#    ./clarifi help     lista todos os comandos
+#
+#  No Windows use ./clarifi.cmd (ou apenas ./clarifi no PowerShell).
+# ===============================================================
+set -euo pipefail
 
 cd "$(dirname "$0")"
 
-GREEN='\033[0;32m'
-NC='\033[0m'
+CYAN='\033[0;36m'; GREEN='\033[0;32m'; YELLOW='\033[0;33m'; RED='\033[0;31m'; BOLD='\033[1m'; NC='\033[0m'
 
-case "$1" in
-  dev)
-    echo -e "${GREEN}Iniciando ambiente de desenvolvimento ClariFi...${NC}"
-    docker compose up -d --build
-    echo -e "${GREEN}Aguardando o volume sincronizar (Docker Desktop)...${NC}"
-    for i in $(seq 1 60); do docker compose exec -T app test -f artisan 2>/dev/null && break; sleep 1; done
-    echo -e "${GREEN}Limpando caches de um build anterior...${NC}"
-    docker compose exec -T app php artisan optimize:clear
-    echo -e "${GREEN}Aplicando migrations no banco...${NC}"
-    docker compose run --rm app sh -c "while [ ! -f artisan ]; do sleep 1; done; php artisan migrate"
-    echo -e "${GREEN}Aplicação rodando em: http://localhost:8000${NC}"
-    echo -e "${GREEN}Vite Dev Server rodando em: http://localhost:5173${NC}"
-    ;;
+info()    { printf "${CYAN}==>${NC} %s\n" "$1"; }
+success() { printf "${GREEN}OK ${NC} %s\n" "$1"; }
+warn()    { printf "${YELLOW}!  ${NC} %s\n" "$1"; }
+fail()    { printf "${RED}x  ${NC} %s\n" "$1" >&2; exit 1; }
 
-  build)
-    echo -e "${GREEN}Gerando build de produção dos ativos de frontend...${NC}"
-    docker compose run --rm vite sh -c "for i in \$(seq 1 60); do [ -f package.json ] && break; echo 'Aguardando sincronizacao do volume...'; sleep 1; done; npm install && npm run build"
-    echo -e "${GREEN}Otimizando rotas e cache do Laravel...${NC}"
-    for task in config:cache route:cache view:cache; do
-      docker compose run --rm app sh -c "while [ ! -f artisan ]; do sleep 1; done; php artisan $task"
-    done
-    echo -e "${GREEN}Build concluído com sucesso!${NC}"
-    ;;
+APP_PORT_VALUE="${APP_PORT:-8000}"
+VITE_PORT_VALUE="${VITE_PORT:-5173}"
 
-  down)
-    echo -e "${GREEN}Parando os containers do ClariFi...${NC}"
-    docker compose down
-    ;;
+require_docker() {
+    command -v docker >/dev/null 2>&1 || fail "Docker nao encontrado. Instale o Docker Desktop."
+    docker compose version >/dev/null 2>&1 || fail "Docker Compose v2 nao encontrado."
+    docker info >/dev/null 2>&1 || fail "O daemon do Docker nao esta rodando. Abra o Docker Desktop e tente de novo."
+}
 
-  artisan)
-    shift
-    docker compose exec app php artisan "$@"
-    ;;
+ensure_env_file() {
+    if [ ! -f .env ]; then
+        info "criando .env a partir de .env.example"
+        cp .env.example .env
+    fi
+}
 
-  *)
-    echo "Uso: ./clarifi {dev|build|down|artisan}"
-    exit 1
-    ;;
+ensure_up() {
+    require_docker
+    if [ -z "$(docker compose ps -q app 2>/dev/null)" ]; then
+        cmd_dev
+    fi
+}
+
+cmd_dev() {
+    require_docker
+    ensure_env_file
+
+    info "construindo e subindo os containers"
+    # --wait: o compose so retorna quando todos os servicos estao
+    # saudaveis, entao nao e preciso fazer polling na mao aqui.
+    if ! docker compose up -d --build --wait --wait-timeout 600; then
+        docker compose logs --tail=60
+        fail "o ambiente nao ficou pronto a tempo"
+    fi
+
+    echo
+    printf "${BOLD}${GREEN}ClariFi esta no ar${NC}\n"
+    printf "  Aplicacao      http://localhost:%s\n" "$APP_PORT_VALUE"
+    printf "  Vite (HMR)     http://localhost:%s\n" "$VITE_PORT_VALUE"
+    printf "  Postgres       localhost:%s\n" "${DB_PORT_FORWARD:-5432}"
+    echo
+    printf "  Logs           ./clarifi logs\n"
+    printf "  Artisan        ./clarifi artisan <comando>\n"
+    printf "  Parar          ./clarifi down\n"
+    echo
+}
+
+cmd_build() {
+    require_docker
+    ensure_env_file
+
+    info "compilando os ativos de frontend (Vite)"
+    docker compose run --rm --no-deps --entrypoint sh vite -c \
+        "npm ci --no-audit --no-fund && npm run build"
+
+    info "construindo a imagem de producao (clarifi:local)"
+    docker build --target production --tag clarifi:local .
+
+    echo
+    success "build concluido"
+    printf "  Assets         public/build\n"
+    printf "  Imagem         clarifi:local  (porta 8080)\n"
+    printf "  Executar       docker run --rm -p 8080:8080 --env-file .env clarifi:local\n"
+    echo
+    warn "o cache de config/rotas nao e gerado no bind mount: rode 'php artisan optimize' no deploy"
+}
+
+cmd_test() {
+    ensure_up
+    info "executando a suite de testes"
+    docker compose exec -T app php artisan test "$@"
+}
+
+cmd_lint() {
+    ensure_up
+    if [ "${1:-}" = "--check" ]; then
+        info "verificando o estilo do codigo (Pint)"
+        docker compose exec -T app vendor/bin/pint --test
+    else
+        info "formatando o codigo (Pint)"
+        docker compose exec -T app vendor/bin/pint
+    fi
+}
+
+cmd_help() {
+    cat <<'HELP'
+ClariFi - comandos disponiveis
+
+  Ambiente
+    dev                 sobe o ambiente completo de desenvolvimento
+    down                para e remove os containers
+    stop                apenas para os containers (mantem o estado)
+    restart             reinicia os containers
+    reset               destroi containers e volumes e sobe do zero
+    ps                  mostra o estado dos containers
+    logs [servico]      acompanha os logs (padrao: todos)
+
+  Build e qualidade
+    build               compila os assets e a imagem de producao
+    test [args]         roda a suite de testes (php artisan test)
+    lint                formata o codigo com o Pint
+    lint --check        falha se houver codigo fora do padrao (usado no CI)
+
+  Atalhos
+    artisan <args>      php artisan dentro do container
+    composer <args>     composer dentro do container
+    npm <args>          npm dentro do container do Vite
+    shell [servico]     abre um shell (padrao: app)
+    migrate [args]      php artisan migrate
+    fresh               php artisan migrate:fresh (apaga os dados)
+HELP
+}
+
+case "${1:-help}" in
+    dev|up)   cmd_dev ;;
+    build)    cmd_build ;;
+    down)     require_docker; info "removendo os containers"; docker compose down ;;
+    stop)     require_docker; info "parando os containers";   docker compose stop ;;
+    restart)  require_docker; docker compose restart; success "containers reiniciados" ;;
+    reset)
+        require_docker
+        warn "isso apaga o banco de dados e as dependencias instaladas"
+        docker compose down --volumes --remove-orphans
+        cmd_dev
+        ;;
+    ps)       require_docker; docker compose ps ;;
+    logs)     require_docker; shift || true; docker compose logs -f --tail=100 "$@" ;;
+    shell)    ensure_up; docker compose exec "${2:-app}" sh ;;
+    artisan)  ensure_up; shift; docker compose exec app php artisan "$@" ;;
+    composer) ensure_up; shift; docker compose exec app composer "$@" ;;
+    npm)      ensure_up; shift; docker compose exec vite npm "$@" ;;
+    migrate)  ensure_up; shift; docker compose exec app php artisan migrate "$@" ;;
+    fresh)    ensure_up; docker compose exec app php artisan migrate:fresh ;;
+    test)     shift; cmd_test "$@" ;;
+    lint)     shift; cmd_lint "$@" ;;
+    help|-h|--help) cmd_help ;;
+    *)        printf "${RED}comando desconhecido: %s${NC}\n\n" "$1"; cmd_help; exit 1 ;;
 esac

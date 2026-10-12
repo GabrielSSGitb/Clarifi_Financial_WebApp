@@ -1,28 +1,62 @@
 name: clarifiapp
 
+# ---------------------------------------------------------------
+#  Variaveis de ambiente injetadas no container PHP.
+#
+#  Elas tem precedencia sobre o .env (o Dotenv do Laravel roda em
+#  modo imutavel), o que garante que o app SEMPRE fale com o
+#  Postgres do compose, independente do que estiver no .env local.
+# ---------------------------------------------------------------
+x-app-environment: &app-environment
+    APP_ENV: local
+    APP_DEBUG: "true"
+    APP_URL: http://localhost:${APP_PORT:-8000}
+    DB_CONNECTION: pgsql
+    DB_HOST: pgsql
+    DB_PORT: "5432"
+    DB_DATABASE: ${DB_DATABASE:-clarifi_db}
+    DB_USERNAME: ${DB_USERNAME:-clarifi_user}
+    DB_PASSWORD: ${DB_PASSWORD:-clarifi_secret}
+
 services:
     app:
         build:
             context: .
-            dockerfile: Dockerfile
+            target: dev
+        image: clarifi/app:dev
         container_name: clarifi_app
         restart: unless-stopped
         working_dir: /var/www
-        volumes:
-            - ${PWD:-.}:/var/www
+        command: ["serve-app"]
+        environment: *app-environment
         ports:
-            - "8000:8000"
-        command: sh -c "while [ ! -f artisan ]; do echo 'Aguardando sincronizacao do volume...'; sleep 1; done; php artisan serve --host=0.0.0.0 --port=8000"
-        environment:
-            DB_CONNECTION: pgsql
-            DB_HOST: pgsql
-            DB_PORT: 5432
-            DB_DATABASE: ${DB_DATABASE:-clarifi_db}
-            DB_USERNAME: ${DB_USERNAME:-clarifi_user}
-            DB_PASSWORD: ${DB_PASSWORD:-clarifi_secret}
+            - "${APP_PORT:-8000}:8000"
+        volumes:
+            - .:/var/www
+            # vendor em volume nomeado: o host (Windows/PHP 8.5) e o
+            # container (Linux/PHP 8.4) mantem instalacoes separadas.
+            - app_vendor:/var/www/vendor
+        # Apenas ordem de inicializacao. A espera pelo banco fica a cargo do
+        # entrypoint (wait_for_database). Usar "condition: service_healthy"
+        # faz o Compose anexar o stream de logs do pgsql enquanto espera, e
+        # esse stream nao fecha quando a saida nao e um terminal no Windows,
+        # travando o "docker compose up -d" indefinidamente.
         depends_on:
-            pgsql:
-                condition: service_healthy
+            - pgsql
+
+    vite:
+        image: node:24-alpine
+        container_name: clarifi_vite
+        restart: unless-stopped
+        working_dir: /var/www
+        entrypoint: ["sh", "/var/www/docker/entrypoint.node.sh"]
+        ports:
+            - "${VITE_PORT:-5173}:5173"
+        volumes:
+            - .:/var/www
+            # node_modules em volume nomeado: binarios nativos do host
+            # (win32) nao sao compativeis com o container (linux-musl).
+            - app_node_modules:/var/www/node_modules
 
     pgsql:
         image: postgres:16-alpine
@@ -33,25 +67,17 @@ services:
             POSTGRES_USER: ${DB_USERNAME:-clarifi_user}
             POSTGRES_PASSWORD: ${DB_PASSWORD:-clarifi_secret}
         ports:
-            - "5432:5432"
+            - "${DB_PORT_FORWARD:-5432}:5432"
         volumes:
-            - clarifi_pgsql_data:/var/lib/postgresql/data
+            - app_pgsql_data:/var/lib/postgresql/data
         healthcheck:
             test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
             interval: 5s
             timeout: 5s
-            retries: 10
+            retries: 20
             start_period: 10s
 
-    vite:
-        image: node:20-alpine
-        container_name: clarifi_vite
-        working_dir: /var/www
-        volumes:
-            - ${PWD:-.}:/var/www
-        ports:
-            - "5173:5173"
-        command: sh -c "while [ ! -f package.json ]; do echo 'Aguardando sincronizacao do volume...'; sleep 1; done; npm install && npm run dev -- --host"
-
 volumes:
-    clarifi_pgsql_data:
+    app_pgsql_data:
+    app_vendor:
+    app_node_modules:
