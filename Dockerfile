@@ -15,7 +15,7 @@
 # ---------------------------------------------------------------
 # base
 # ---------------------------------------------------------------
-FROM php:8.4-cli-alpine AS base
+FROM php:8.5-cli-alpine AS base
 
 COPY --from=mlocati/php-extension-installer:2 /usr/bin/install-php-extensions /usr/local/bin/
 
